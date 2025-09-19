@@ -1,0 +1,7 @@
+﻿  chat server with SQlite.cpp
+C:\TalkBrader Proj\Server with Sqlite\chat server with SQlite\chat server with SQlite.cpp(318,55): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\TalkBrader Proj\Server with Sqlite\chat server with SQlite\chat server with SQlite.cpp(403,43): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\TalkBrader Proj\Server with Sqlite\chat server with SQlite\chat server with SQlite.cpp(426,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\TalkBrader Proj\Server with Sqlite\chat server with SQlite\chat server with SQlite.cpp(518,29): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  sqlite3.c
+  chat server with SQlite.vcxproj -> C:\TalkBrader Proj\Server with Sqlite\x64\Debug\chat server with SQlite.exe
