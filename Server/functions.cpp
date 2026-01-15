@@ -2,7 +2,6 @@
 #include "database.h"
 #include "picosha2.h"
 #include <iostream>
-//#include <thread>
 #include <cstdlib>
 #include <ctime>
 #include <vector>
@@ -336,17 +335,17 @@ void searchForClient(int client , std::string msg) {
 
 
 
-
+/*
 void readClientMsg(int client, fd_set& master_list) {
 
     std::cout << "func called " << std::endl;
 
 
     uint32_t size = 0; //4 bytes variable
-    /* visual
-    memory address   0x1000  0x1001  0x1002  0x1003
-    value              00       00     00      00
-    */
+    //visual
+    //memory address   0x1000  0x1001  0x1002  0x1003
+    //value              00       00     00      00
+    
     int received = 0;
 
     while (received < sizeof(size)) {
@@ -411,7 +410,7 @@ void readClientMsg(int client, fd_set& master_list) {
 
 
 }
-
+*/
 
 
 
