@@ -120,22 +120,30 @@ int main() {
         for (auto thisSocket = clients.begin(); thisSocket != clients.end(); ) {
             //loop through each one in clients  as thisSocket
 
-            int fd = thisSocket->first;
+            auto& state = thisSocket->second;
+
+            bool midMessage = !state.readingSize || state.received > 0;
+
+            //int fd = thisSocket->first;
             //get first part value of the unourdered map (int fd, fd_set& socket_list)
             //get client socket fd 
 
-            clientState& state = thisSocket->second;
+            //clientState& state = thisSocket->second;
             //get second part value of the unourdered map
             //get the stuct as refernce not copy
             //so we can edit the data directly
 
-            if (currentTime - state.lastActivity > 5) { // 5 second timeout
-                close(fd);
-                FD_CLR(fd, &socket_list);
+            //if (currentTime - state.lastActivity > 5) { // 5 second timeout
+            if (midMessage && currentTime - state.lastActivity > 5) {
+                //close(fd);
+                close(thisSocket->first);
+                FD_CLR(thisSocket->first, &socket_list);
+                //FD_CLR(fd, &socket_list);
                 thisSocket = clients.erase(thisSocket);
                 // erase and move to next
                 std::cout << "client timed out\n";
             } 
+
             else {++thisSocket; } // move to next client
         }
 
@@ -161,7 +169,7 @@ int main() {
                     sockaddr_in clientAddr;
                     socklen_t clientLen = sizeof(clientAddr);
                     int client = accept(server_fd, (sockaddr*)&clientAddr, &clientLen);
-
+                    
                     if (client == -1) { std::cerr << "Accept failed\n"; continue; }
 
                     //put the new client to socket_list
@@ -171,6 +179,9 @@ int main() {
                     // update max_fd so select() checks all sockets, including the new client
                     std::cout << "connected and added to socket list" << std::endl;
                     std::cout << "New client connected\n";
+
+                    clients[client].lastActivity = time(nullptr);
+
                 }
                 else {
 
