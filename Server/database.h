@@ -6,6 +6,9 @@
 #include <string>
 #include <mutex>
 
+#include "json.hpp"
+using json = nlohmann::json;
+
 class Database {
 	private:
 		sqlite3* db;
@@ -25,11 +28,11 @@ class Database {
 		void closeDatabase();
 
 	public:
-		// Singleton instance getter (The word “instance” just means an object of a class)
+		// Singleton instance getter (The word ï¿½instanceï¿½ just means an object of a class)
 		static Database& getInstance(const std::string& path = "users.db");
 		//static Means you can call this function without creating a Database object.
 		//& no copy of object is made. just address is given.
-		//(= "users.db" ) -> default value,if don’t pass anything, it uses "users.db"
+		//(= "users.db" ) -> default value,if donï¿½t pass anything, it uses "users.db"
 
 		Database(const Database&) = delete; // Delete copy constructor
 		Database& operator=(const Database&) = delete; // Delete copy assignment operator
@@ -44,9 +47,9 @@ class Database {
 		bool validateLogin(const std::string& username, const std::string& passwordHash);
 		void updateUserToken(const std::string& username, const std::string& token);
 		bool registerUser(const std::string& username, const std::string& passwordHash, const std::string& token);
-		void addFriendRequestTable(const std::string& friendName, const std::string& token);
+		void addFriendRequestTable(int friendId, const std::string& token);
 		int whatUserIdIAM(const std::string hashToken);
-		std::vector<std::string> searchUsers(const std::string& query);
+		json searchUsers(const std::string& query);
 		std::vector<std::string> friendPendingRequest(const int clientId);
 		void acceptFriendRequest(const std::string& friendName, const std::string& hashtoken);
 

@@ -151,6 +151,16 @@ void MainWindow::runWhenDataReceived()
 
             int count = names.size();
 
+            QJsonArray names_id = obj["names"].toArray();
+            //convert the json arrays to normal arrays
+
+            QStringList name_id_List;
+            //QStringList is modified vector. has more functions.
+
+            for (const QJsonValue &val : names_id) {
+                name_id_List.append(val.toString());
+            }
+
             QWidget *container = new QWidget;               // new container for buttons
             QVBoxLayout *layout = new QVBoxLayout(container);
 
@@ -159,15 +169,20 @@ void MainWindow::runWhenDataReceived()
                 QPushButton *b = new QPushButton(nameList[i]);
                 layout->addWidget(b);
 
-                connect(b, &QPushButton::clicked, this, [this, b]() {  // <-- capture 'this' too
+                connect(b, &QPushButton::clicked, this, [b,name_id_List,nameList]() {
+                    QString toId;
+                    for(int i = 0; i<nameList.size(); i++){
+                        if(b->text()==nameList[i]) toId = name_id_List[i];
+                    }
+
 
                     QJsonObject json;
-                    json["event"]  = "SENT_FRIEND_REQUEST";
-                    json["token"]   = token;
-                    json["toName"] = b->text();
+                    json["event"]  = "SEND_FRIEND_REQUEST";
+                    json["token"]  = token;
+                    json["toId"] = toId.toInt();
                     qDebug() << "send friend request to: " << b->text();
 
-                    jsonSend(json);  // now works because 'this' is captured
+                    jsonSend(json);
                 });
 
             }
@@ -178,8 +193,6 @@ void MainWindow::runWhenDataReceived()
             // Set the container to the scroll area from UI
             ui->scrollArea->setWidget(container);
             ui->scrollArea->setWidgetResizable(true);
-
-
 
 
         }
@@ -253,7 +266,7 @@ void MainWindow::on_searchB_clicked()
     jsonSend(json);
 
     ui->searchBar->clear();
-    qDebug()<<"sent "<<name;
+    qDebug() << "sent " << name;
 
     ui->pushButton->setEnabled(true);
 }

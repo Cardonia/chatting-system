@@ -28,7 +28,7 @@ std::unordered_map<std::string, int>EventMap = {
     {"TOKEN_CHECK" , 2},
     {"LOGIN" , 3},
     {"SEARCH_FRIEND" , 5},
-    {"SENT_FRIEND_REQUEST" , 6},
+    {"SEND_FRIEND_REQUEST" , 6},
     {"ACCEPT_FRIEND_REQUEST" , 7}
 
 };
@@ -134,19 +134,22 @@ void acceptFriendRequest(int client, std::string msg) {
 }
 
 
+
+
+
+
+
 void addFriendRequest(int client, std::string msg) {
 	
-    std::cout  << msg << std::endl;
+    
     json j = json::parse(msg);
-    std::cout << "works" << std::endl;
-    std::string token = j["token"];
-    std::cout << "works1" << std::endl;
-    std::string toFriend = j["toName"];
-    std::cout << "works2" << std::endl;
+    
+    std::string token = j["token"];j["toId"];
+    int toFriendId =  j["toId"];
 
     std::string tokenHash = picosha2::hash256_hex_string(token);
-    std::cout << token << " wants to add " << toFriend << " as a friend" << std::endl;
-    db.addFriendRequestTable(toFriend, tokenHash);
+    std::cout << token << " wants to add " << toFriendId << " as a friend" << std::endl;
+    db.addFriendRequestTable(toFriendId, tokenHash);
      
 }
 
@@ -235,6 +238,11 @@ void LoginHandle(int client , std::string msg) {
         }
 }
 
+
+
+
+
+
 void RegisterHandle(int client,std::string msg) {
     std::cout << " register function called" << std::endl;
    
@@ -243,12 +251,6 @@ void RegisterHandle(int client,std::string msg) {
     std::string username = j["username"];
     std::string password = j["password"];
 
-
-
-
-
-
-    
 
     if (db.userExists(username)) {
         std::cout << "Username exists" << std::endl;
@@ -311,106 +313,17 @@ void searchForClient(int client , std::string msg) {
     std::string searchName = j["name"];
     std::cout << "Searching for: " << searchName << std::endl;
 
-
-   
-
-    std::vector<std::string> names = db.searchUsers(searchName);
-       
+    json result = db.searchUsers(searchName);
 
         json json;
         json["event"] = "SEARCH_FRIEND_RESULT";
-        json["names"] = names;  // put vector in JSON
-
-        // Convert to string to send
-        
-		
-
+        json["names"] = result["names"];
+        json["names_id"] = result["names_id"];
 		sendClientMsg(client, json);
-        
-
-    
 }
 
 
 
-
-
-/*
-void readClientMsg(int client, fd_set& master_list) {
-
-    std::cout << "func called " << std::endl;
-
-
-    uint32_t size = 0; //4 bytes variable
-    //visual
-    //memory address   0x1000  0x1001  0x1002  0x1003
-    //value              00       00     00      00
-    
-    int received = 0;
-
-    while (received < sizeof(size)) {
-        //sizeof(size) is 4 bytes because of uint32_t type is 4 bytes
-        //mean 0 < 4
-        std::cout << "reading size " << received << std::endl;
-
-        char* start = (char*)&size;
-        //pointer for the 4 memory address of size variable. default address is 0x1000 the memory  address
-        char* whereToWrite = start + received;
-        //address of the memory to write the new data. start is 0x1000 + received(0,1,2,3) = 0x1000,0x1001,0x1002,0x1003
-        int howManyLeft = sizeof(size) - received;
-        // how many bytes still needed sizeof(size) is 4 - received(0,1,2,3) = 4,3,2,1
-
-        int r = recv(client, whereToWrite, howManyLeft, 0);
-        //recive data from client socket store address whereToWrite(0x1000,0x1001,0x1002,0x1003). start from first address 0x1000 till end address 0x1003. howManyLeft(4,3,2,1) bytes to read
-        if (r <= 0) {
-            close(client);
-            FD_CLR(client, &master_list);   // <--- remove it from the list
-            std::cout << "client disconnected" << std::endl;
-            return;
-        }
-
-        received += r;
-    }
-    size = ntohl(size);
-    //convert from network byte order to host byte order (big-endian to little-endian)
-    std::cout << "read size " << received << std::endl;
-    std::cout << "read finished" << std::endl;
-
-    //now size variable has a number from 0 to 4,228,250,625
-
-    std::vector<char> buffer(size);
-    //make a char vector named buffer which the size is depend on (size variable).
-    // if size is 50 then this vector has 50 char rows
-    received = 0;
-    while (received < (int)size) {
-        //(int)size convert size which is uint_t to int
-        std::cout << "reading msg " << received << std::endl;
-        char* start = buffer.data();
-        //pointer to vector first row address to start there to write
-        char* whereToWrite = start + received; // where to write
-        int howManyLeft = size - received;    // how many bytes left to write
-
-        int r = recv(client, whereToWrite, howManyLeft, 0);
-
-        if (r <= 0) {
-            close(client);
-            FD_CLR(client, &master_list);   // <--- remove it from the list
-            std::cout << "client disconnected" << std::endl;
-            return;
-        }
-
-        received += r;
-        // r how many bytes got from client. then add to received to know how many bytes are read by now
-    }
-    std::cout << "second loop finished " << std::endl;
-    std::string msg(buffer.begin(), buffer.end());
-    //from index 0 to last index of the vector put in msg as string
-    std::cout << "Client says: " << msg << std::endl;
-    handleClientEvent(client, msg);
-
-
-}
-*/
 
 
 

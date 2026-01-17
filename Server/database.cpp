@@ -2,8 +2,8 @@
 #include "functions.h"
 #include <iostream>
 
-
-
+#include "json.hpp"
+using json = nlohmann::json;
 
 Database& Database::getInstance(const std::string& path) {
 	//Database& =reference to a Database object.
@@ -45,7 +45,7 @@ void Database::closeDatabase() {
 		sqlite3_close(db);
 
 		db = nullptr;
-		//After closing, the pointer still has the old memory address.Setting it to nullptr makes it clear : “no database is open now.”
+		//After closing, the pointer still has the old memory address.Setting it to nullptr makes it clear : ï¿½no database is open now.ï¿½
 	}
 }
 
@@ -202,25 +202,31 @@ bool Database::registerUser(const std::string& username, const std::string& pass
 
 
 
-std::vector<std::string> Database::searchUsers(const std::string& name) {
-	std::vector<std::string> results;
-	std::string sql = "SELECT username FROM users WHERE username LIKE ? LIMIT 15;";
+json Database::searchUsers(const std::string& name) {
+	
+	std::vector<std::string> names;
+	std::vector<int> names_id;
+	std::string sql = "SELECT id , username FROM users WHERE username LIKE ? LIMIT 15;";
 	sqlite3_stmt* stmt;
-
 	std::string searchPattern = name + "%";
 
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_text(stmt, 1, searchPattern.c_str(), -1, SQLITE_STATIC);
 
 		while (sqlite3_step(stmt) == SQLITE_ROW) {
-			const char* username = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+			int id = sqlite3_column_int(stmt, 0);
+			const char* username = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
 			if (username) {
-				results.push_back(username);
+				names.push_back(username);
+				names_id.push_back(id);	
 			}
 		}
 		sqlite3_finalize(stmt);
 	}
-	return results;
+	json j;
+	j["names"] = names;
+	j["names_id"] = names_id;
+	return j;
 }
 
 
@@ -229,8 +235,7 @@ std::vector<std::string> Database::searchUsers(const std::string& name) {
 
 
 
-
-void Database::addFriendRequestTable(const std::string& friendName, const std::string& hashtoken) {
+void Database::addFriendRequestTable(int friendId, const std::string& hashtoken) {
 	
 	sqlite3_stmt* stmt;
 	
@@ -249,19 +254,6 @@ void Database::addFriendRequestTable(const std::string& friendName, const std::s
 	if (senderId == -1) {std::cout << "Invalid token, sender not found!" << std::endl;return;}
 
 	
-	std::string sqlFriend = "SELECT id FROM users WHERE username = ?;";
-	int friendId = -1;
-	if (sqlite3_prepare_v2(db, sqlFriend.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, friendName.c_str(), -1, SQLITE_STATIC);
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			friendId = sqlite3_column_int(stmt, 0);
-		}
-		sqlite3_finalize(stmt);
-	}
-	//get friend id from username in users table
-
-	if (friendId == -1) {std::cout << "Friend username not found!" << std::endl;return;}
-
 	
 	
 
@@ -323,7 +315,7 @@ void Database::addFriendRequestTable(const std::string& friendName, const std::s
 	if (onlineClients.find(hashtoken) != onlineClients.end()){
 		
 		int sock = onlineClients[hashtoken];
-		// You can now send data to sock
+		
 		updateAllClientData(sock, hashtoken);
 	}
 	
