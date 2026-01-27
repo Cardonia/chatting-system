@@ -11,6 +11,7 @@
 #include <QString>
 #include <QPushButton>
 #include <QJsonArray>
+#include <QCryptographicHash>
 
 //constructor
 MainWindow::MainWindow() : QMainWindow(nullptr)
@@ -32,6 +33,7 @@ void MainWindow::checkToken(){
     QSettings settings("TalkBradarDev", "TalkBradar");
     token = settings.value("token", "").toString();
     qDebug()<<"current user token is "<<token;
+
     if (token.isEmpty()) {
         qDebug() << "Token Dont Exist";
         ui->stackedWidget->setCurrentWidget(ui->signoutPage);
@@ -131,7 +133,9 @@ void MainWindow::runWhenDataReceived()
         else if(event=="SEARCH_FRIEND_RESULT"){
             qDebug()<<"SEARCH_FRIEND_RESULT";
 
-
+            //example
+            //names{sam}
+            //names id{1]
 
             QJsonArray names = obj["names"].toArray();
             //convert the json arrays to normal arrays
@@ -146,20 +150,24 @@ void MainWindow::runWhenDataReceived()
             //&val hold reference of each value in the names then put in the vector. &val = no copying
             //.append is push_back()
 
-            //QString str = QString::fromUtf8(data);
-            qDebug()<<"recived "<<nameList;
-
             int count = names.size();
 
-            QJsonArray names_id = obj["names"].toArray();
+
+            //example
+            //namelist { sam }
+
+            QJsonArray names_id = obj["names_id"].toArray();
             //convert the json arrays to normal arrays
 
             QStringList name_id_List;
             //QStringList is modified vector. has more functions.
 
-            for (const QJsonValue &val : names_id) {
-                name_id_List.append(val.toString());
+            for (const QJsonValue &val2 : names_id) {
+                name_id_List.append(QString::number(val2.toDouble()));
             }
+
+            //example
+            //name_id_List {1}
 
             QWidget *container = new QWidget;               // new container for buttons
             QVBoxLayout *layout = new QVBoxLayout(container);
@@ -180,7 +188,7 @@ void MainWindow::runWhenDataReceived()
                     json["event"]  = "SEND_FRIEND_REQUEST";
                     json["token"]  = token;
                     json["toId"] = toId.toInt();
-                    qDebug() << "send friend request to: " << b->text();
+                    qDebug() << "send friend request to: " << b->text()<< "Its ID "<<toId.toInt();
 
                     jsonSend(json);
                 });
@@ -193,7 +201,6 @@ void MainWindow::runWhenDataReceived()
             // Set the container to the scroll area from UI
             ui->scrollArea->setWidget(container);
             ui->scrollArea->setWidgetResizable(true);
-
 
         }
         else if(event=="FRIEND_REQUEST_PENDING_LIST"){
@@ -294,6 +301,7 @@ void MainWindow::on_loginB_2_clicked()
     QJsonObject json;
     json["event"] = "LOGIN";
     json["username"] = username;
+
     json["password"] = password;
 
     jsonSend(json);
