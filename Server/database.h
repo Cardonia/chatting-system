@@ -4,7 +4,6 @@
 #include "sqlite3.h"
 #include <vector>
 #include <string>
-#include <mutex>
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -17,7 +16,7 @@ class Database {
 		std::string dbPath; // Path to the SQLite database file
 		
 
-		std::mutex dbMutex;
+		
 
 		// Private constructor for singleton pattern(Only one object of a class can exist in the whole program.)
 		Database(const std::string& path); //put path of database in this constructor
@@ -41,7 +40,6 @@ class Database {
 
 
 		// User operations
-		void showTableOnConsole();
 		bool validateToken(const std::string& token);
 		bool userExists(const std::string& username);
 		bool validateLogin(const std::string& username, const std::string& passwordHash);

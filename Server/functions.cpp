@@ -5,7 +5,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include <mutex>
+#include <fstream>
+#include <sstream>
+#include <chrono>
+#include <iomanip>
 #include <unordered_map>
 
 #include <sys/select.h>
@@ -13,8 +16,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <unistd.h>   // for close()
-#include <cstring>    // for memset
+#include <unistd.h>   
+#include <cstring>    
 
 
 #include "json.hpp"
@@ -32,6 +35,9 @@ std::unordered_map<std::string, int>EventMap = {
     {"ACCEPT_FRIEND_REQUEST" , 7}
 
 };
+
+std::vector<std::string> logBuffer;
+//storing logs
 
 std::map<std::string, int> onlineClients; 
 // key = token, value = socket
@@ -110,9 +116,204 @@ void handleClientEvent(int client, std::string msg) {
 
 
 
+//////////////////////////////////////////////////////////////////
+
+void checkToken(int client , std::string msg) {
+
+    log("Check Token , FD = "+client);
+    json j = json::parse(msg);
+    std::string tokenFromUser = j["token"];
+    std::string tokenHash = picosha2::hash256_hex_string(tokenFromUser);
+
+    if (db.validateToken(tokenHash)) {
+        std::cout << "Token matched!" << std::endl;
+		json j2;
+		j2["event"] = "TOKEN_VALID";
+		sendClientMsg(client, j2);
+
+        onlineClients[tokenHash] = client;
+        updateAllClientData(client, tokenFromUser);
+
+        log("Check Token = Valid , FD = "+client);
+
+        //###########################################
+        for (const auto& pair : onlineClients) {
+            const std::string& token = pair.first;
+            int socket = pair.second;
+            std::cout <<"online map : "<< "Token: " << token << ", Socket: " << socket << std::endl;
+        }   
+        //###########################################
+    }
+    else {
+        std::cout << "No match for token" << std::endl;
+        json j3;
+        j3["event"] = "TOKEN_INVALID";
+        sendClientMsg(client, j3);
+        log("Check Token = Invalid , FD = "+client);
+    }
+}
 
 
 
+///////////////////////////////////////////////////////
+
+
+void RegisterHandle(int client,std::string msg) {
+    std::cout << " register function called" << std::endl;
+    log("Register , FD = "+client);
+
+    json j = json::parse(msg);
+    std::string username = j["username"];
+    std::string password = j["password"];
+
+    if (db.userExists(username)) {
+        std::cout << "Username exists" << std::endl;
+
+        json j; 
+        j["event"] = "REGISTER_USER_EXIST";
+   
+        sendClientMsg(client, j);
+        log("Register = Failed (User Already Exist) , FD = "+client);
+        return;
+    }
+   
+    std::string token = generateToken();
+    json j2;
+	j2["event"] = "REGISTER_SUCCESS";
+    j2["token"] = token;
+    
+	sendClientMsg(client, j2);
+
+    std::string passwordHash = picosha2::hash256_hex_string(password);
+    std::string tokenHash = picosha2::hash256_hex_string(token);
+
+    db.registerUser(username, passwordHash, tokenHash);
+	std::cout << "User registered successfully"<<std::endl;
+    
+    onlineClients[tokenHash] = client;
+
+    log("Register = Success, FD = "+client);
+}
+
+
+
+///////////////////////////////////////////////////////
+
+
+
+
+void LoginHandle(int client , std::string msg) {
+    log("Login , FD = "+client);
+    std::cout << "Received: " << msg << std::endl;
+
+    json j = json::parse(msg);
+    std::string username = j["username"];
+    std::string password = j["password"];
+    std::string passwordPash = picosha2::hash256_hex_string(password);
+    
+        if (db.validateLogin(username, passwordPash)) {
+            
+            std::cout << "Login OK\n";
+            log("Login = Success, FD = "+client);
+
+            std::string newToken = generateToken();
+            std::string newTokeHash = picosha2::hash256_hex_string(newToken);
+            db.updateUserToken(username, newTokeHash);
+
+            json j2;
+            j2["event"] = "LOGIN_SUCCESS";
+			j2["token"] = newToken;
+           
+			sendClientMsg(client, j2);
+
+            updateAllClientData(client, newToken);
+
+            int socket_fd = client;
+            onlineClients[newTokeHash] = socket_fd;
+
+        }
+        else {
+            log("Login = Failed , FD = "+client);
+            json j3;
+            j3["event"] = "LOGIN_FAILED";
+            sendClientMsg(client, j3);
+            std::cout << "Wrong username or password\n";
+        }
+}
+
+
+
+
+///////////////////////////////////////////////////////////
+
+
+
+
+
+std::string generateToken() {
+    srand(time(0));//for token generation
+    std::string token;
+    token.clear();
+    token.reserve(10); // reserve(store) space for 10 characters
+    for (int i = 0; i < 10; i++) {
+        char c = 49 + rand() % (122 - 49 + 1);
+        token = token + c;
+    }
+    std::cout << "Generated Token: " << token << std::endl;
+    return token;
+}
+
+
+
+
+////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void searchForClient(int client , std::string msg) {
+    log("Search For Friend , FD = "+client);
+	json j = json::parse(msg);
+    std::string searchName = j["name"];
+    std::cout << "Searching for: " << searchName << std::endl;
+
+    json result = db.searchUsers(searchName);
+
+        json json;
+        json["event"] = "SEARCH_FRIEND_RESULT";
+        json["names"] = result["names"];
+        json["names_id"] = result["names_id"];
+		sendClientMsg(client, json);
+}
+
+
+
+
+
+/////////////////////////////////////////////////////
+
+
+
+
+
+void addFriendRequest(int client, std::string msg) {
+    json j = json::parse(msg);
+    std::string token = j["token"];
+    int toFriendId =  j["toId"];
+    log("Add friend request to "+toFriendId+" id , FD = "+client);
+    std::string tokenHash = picosha2::hash256_hex_string(token);
+    std::cout << token << " wants to add " << toFriendId << " ID as a friend" << std::endl;
+    db.addFriendRequestTable(toFriendId, tokenHash);
+}
+
+
+
+
+/////////////////////////////////////////////////////////
 
 
 
@@ -139,19 +340,6 @@ void acceptFriendRequest(int client, std::string msg) {
 
 
 
-void addFriendRequest(int client, std::string msg) {
-	
-    
-    json j = json::parse(msg);
-    
-    std::string token = j["token"];j["toId"];
-    int toFriendId =  j["toId"];
-
-    std::string tokenHash = picosha2::hash256_hex_string(token);
-    std::cout << token << " wants to add " << toFriendId << " as a friend" << std::endl;
-    db.addFriendRequestTable(toFriendId, tokenHash);
-     
-}
 
 
 
@@ -159,168 +347,20 @@ void addFriendRequest(int client, std::string msg) {
 
 
 
-
-
-
-void checkToken(int client , std::string msg) {
-
-   
-    json j = json::parse(msg);
-    std::string tokenFromUser = j["token"];
-
-    std::string tokenHash = picosha2::hash256_hex_string(tokenFromUser);
-
-    if (db.validateToken(tokenHash)) {
-        std::cout << "Token matched!" << std::endl;
-		json j2;
-		j2["event"] = "TOKEN_VALID";
-		sendClientMsg(client, j2);
-        int socket_fd = static_cast<int>(client);
-        onlineClients[tokenHash] = socket_fd;
-        updateAllClientData(client, tokenFromUser);
-        for (const auto& pair : onlineClients) {
-            const std::string& token = pair.first;
-            int socket = pair.second;
-
-            std::cout << "Token: " << token << ", Socket: " << socket << std::endl;
-        }
-    }
-    else {
-        std::cout << "No match for token" << std::endl;
-        json j3;
-        j3["event"] = "TOKEN_INVALID";
-        sendClientMsg(client, j3);
-    }
-
-
-
-}
 
 void updateAllClientData(int client , std::string token) {
     friendPendingRequestList(client, token);
 }
 
 
-void LoginHandle(int client , std::string msg) {
-    
-    std::cout << "Received: " << msg << std::endl;
-
-    json j = json::parse(msg);
-    std::string username = j["username"];
-    std::string password = j["password"];
-    std::string passwordPash = picosha2::hash256_hex_string(password);
-
-
-        if (db.validateLogin(username, passwordPash)) {
-            
-            std::cout << "Login OK\n";
-            std::string newToken = generateToken();
-            std::string newTokeHash = picosha2::hash256_hex_string(newToken);
-            db.updateUserToken(username, newTokeHash);
-
-            json j2;
-            j2["event"] = "LOGIN_SUCCESS";
-			j2["token"] = newToken;
-           
-			sendClientMsg(client, j2);
-
-            updateAllClientData(client, newToken);
-
-            int socket_fd = static_cast<int>(client);
-            onlineClients[newTokeHash] = socket_fd;
-
-        }
-        else {
-            json j3;
-            j3["event"] = "LOGIN_FAILED";
-            sendClientMsg(client, j3);
-            std::cout << "Wrong username or password\n";
-        }
-}
 
 
 
 
 
 
-void RegisterHandle(int client,std::string msg) {
-    std::cout << " register function called" << std::endl;
-   
-
-    json j = json::parse(msg);
-    std::string username = j["username"];
-    std::string password = j["password"];
 
 
-    if (db.userExists(username)) {
-        std::cout << "Username exists" << std::endl;
-
-        json j; 
-        j["event"] = "REGISTER_USER_EXIST";
-   
-        
-        sendClientMsg(client, j);
-        return;
-    }
-   // else send(client, "2", 1, 0);
-    
-    std::string token = generateToken();
-    json j2;
-	j2["event"] = "REGISTER_SUCCESS";
-    j2["token"] = token;
-    
-
-	sendClientMsg(client, j2);
-
-
-
-    std::string passwordHash = picosha2::hash256_hex_string(password);
-    std::string tokenHash = picosha2::hash256_hex_string(token);
-    std::cout << "SHA-256 of \"" << password << "\": " << passwordHash << std::endl;
-    std::cout << "SHA-256 of \"" << token << "\": " << tokenHash << std::endl;
-
-    
-    updateAllClientData(client, token);
-    
-    db.registerUser(username, passwordHash, tokenHash);
-	std::cout << "User registered successfully"<<std::endl;
-    
-    int socket_fd = static_cast<int>(client);
-    onlineClients[tokenHash] = socket_fd;
-
-
-}
-
-std::string generateToken() {
-    srand(time(0));//for token generation
-    std::string token;
-    token.clear();
-    token.reserve(10); // reserve space for 10 characters
-    for (int i = 0; i < 10; i++) {
-        char c = 49 + rand() % (122 - 49 + 1);
-        token = token + c;
-    }
-    std::cout << "Generated Token: " << token << std::endl;
-    return token;
-}
-
-
-
-
-
-void searchForClient(int client , std::string msg) {
-	json j = json::parse(msg);
-    std::string searchName = j["name"];
-    std::cout << "Searching for: " << searchName << std::endl;
-
-    json result = db.searchUsers(searchName);
-
-        json json;
-        json["event"] = "SEARCH_FRIEND_RESULT";
-        json["names"] = result["names"];
-        json["names_id"] = result["names_id"];
-		sendClientMsg(client, json);
-}
 
 
 
@@ -345,4 +385,29 @@ void friendPendingRequestList(int client ,const std::string token) {
 
     sendClientMsg(client, json);
 
+}
+
+
+
+
+/////////////////////////////////////////////////
+////////////////////////////////////////////////
+
+
+
+void log(const std::string& msg) {
+    auto now = std::chrono::system_clock::now();
+    std::time_t t = std::chrono::system_clock::to_time_t(now);
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&t), "%Y-%m-%d %H:%M:%S");
+    std::string logLine = ss.str();
+    logLine+=" / "+msg;
+    logBuffer.push_back(logLine);
+
+    if (logBuffer.size() >= 50) { 
+        std::ofstream file("server.log", std::ios::app);
+        for (auto& m : logBuffer)
+            file << m << '\n';
+        logBuffer.clear();
+    }
 }

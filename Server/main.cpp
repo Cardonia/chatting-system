@@ -179,6 +179,7 @@ int main() {
                     // update max_fd so select() checks all sockets, including the new client
                     std::cout << "connected and added to socket list" << std::endl;
                     std::cout << "New client connected\n";
+                    log("New Client Connected   FD = "+client);
 
                     clients[client].lastActivity = time(nullptr);
 

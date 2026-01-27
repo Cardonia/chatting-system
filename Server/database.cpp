@@ -94,24 +94,8 @@ bool Database::execute(const std::string& sql) {
 }
 
 
-void Database::showTableOnConsole() {
-	const char* sql1 = "SELECT * FROM users;";
 
-	// Inline callback as lambda
-	auto callback = [](void* NotUsed, int argc, char** argv, char** azColName) -> int {
-		for (int i = 0; i < argc; i++) {
-			std::cout << azColName[i] << ": " << (argv[i] ? argv[i] : "NULL") << " | ";
-		}
-		std::cout << std::endl;
-		return 0;
-		};
-
-	sqlite3_exec(db, sql1, callback, nullptr, nullptr);
-
-
-}
-
-
+///////////////////////////////////////////////////////
 
 bool Database::validateToken(const std::string& token) {
 	std::string sql = "SELECT 1 FROM users WHERE token = ?;";
@@ -130,6 +114,20 @@ bool Database::validateToken(const std::string& token) {
 
 }
 
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+
+
+
+
+
+
+
 bool Database::userExists(const std::string& username) {
 	std::string sql = "SELECT 1 FROM users WHERE username = ?;";
 	sqlite3_stmt* stmt;
@@ -145,6 +143,16 @@ bool Database::userExists(const std::string& username) {
 	}
 	return exists;
 }
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+
+
+
 
 
 bool Database::validateLogin(const std::string& username, const std::string& passwordHash) {
@@ -165,6 +173,15 @@ bool Database::validateLogin(const std::string& username, const std::string& pas
 }
 
 
+
+
+
+///////////////////////////////////////////////////////
+
+
+
+
+
 void Database::updateUserToken(const std::string& username, const std::string& token) {
 	std::string sql = "UPDATE users SET token = ? WHERE username = ?;";
 	sqlite3_stmt* stmt;
@@ -176,6 +193,15 @@ void Database::updateUserToken(const std::string& username, const std::string& t
 		sqlite3_finalize(stmt);
 	}
 }
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+
+
 
 
 
@@ -199,13 +225,15 @@ bool Database::registerUser(const std::string& username, const std::string& pass
 
 
 
+///////////////////////////////////////////////////////
+
 
 
 
 json Database::searchUsers(const std::string& name) {
-	
 	std::vector<std::string> names;
 	std::vector<int> names_id;
+
 	std::string sql = "SELECT id , username FROM users WHERE username LIKE ? LIMIT 15;";
 	sqlite3_stmt* stmt;
 	std::string searchPattern = name + "%";
@@ -232,6 +260,8 @@ json Database::searchUsers(const std::string& name) {
 
 
 
+///////////////////////////////////////////////////////
+
 
 
 
@@ -246,6 +276,7 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 		sqlite3_bind_text(stmt, 1, hashtoken.c_str(), -1, SQLITE_STATIC);
 		if (sqlite3_step(stmt) == SQLITE_ROW) {
 			senderId = sqlite3_column_int(stmt, 0);
+			std::cout<<"Sender ID: "<<senderId<<std::endl;
 		}
 		sqlite3_finalize(stmt);
 	}
@@ -261,7 +292,7 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 	if (sqlite3_prepare_v2(db, sqlCheckForExisting.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, senderId);
 		sqlite3_bind_int(stmt, 2, friendId);
-
+		std::cout<<"Sender ID: "<<senderId<<" / Reciver ID: "<<friendId<<std::endl;
 
 		if (sqlite3_step(stmt) == SQLITE_ROW) {
 			std::cout << "request friendship exist from past" << std::endl;
@@ -311,14 +342,14 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 		sqlite3_finalize(stmt);
 	}
 
-
+/*
 	if (onlineClients.find(hashtoken) != onlineClients.end()){
 		
 		int sock = onlineClients[hashtoken];
 		
 		updateAllClientData(sock, hashtoken);
 	}
-	
+*/
 }
 
 
@@ -327,25 +358,8 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 
 
 
-int Database::whatUserIdIAM(const std::string hashToken) {
-	sqlite3_stmt* stmt;
-	std::string sql = "SELECT id FROM users WHERE token = ?;";
-	int clientId = -1;
-	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, hashToken.c_str(), -1, SQLITE_STATIC);
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			clientId = sqlite3_column_int(stmt, 0);
-		}
-		sqlite3_finalize(stmt);
-	}
 
-	if (clientId == -1) {
-		std::cout << "Invalid token, id not found!" << std::endl;
-		return -1;
-	}
 
-	return  clientId;
-}
 
 
 
@@ -431,3 +445,36 @@ void Database::acceptFriendRequest(const std::string& friendName, const std::str
 
 	
 }
+
+
+
+
+
+
+
+int Database::whatUserIdIAM(const std::string hashToken) {
+	sqlite3_stmt* stmt;
+	std::string sql = "SELECT id FROM users WHERE token = ?;";
+	int clientId = -1;
+	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+		sqlite3_bind_text(stmt, 1, hashToken.c_str(), -1, SQLITE_STATIC);
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			clientId = sqlite3_column_int(stmt, 0);
+		}
+		sqlite3_finalize(stmt);
+	}
+	if (clientId == -1) {
+		std::cout << "Invalid token, id not found!" << std::endl;
+		return -1;
+	}
+	return  clientId;
+}
+
+
+
+
+
+
+
+
+

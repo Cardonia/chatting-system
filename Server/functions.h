@@ -19,6 +19,7 @@ using json = nlohmann::json;
 
 extern std::map<std::string, int> onlineClients;
 
+void log(const std::string& msg);
 void handleClientEvent(int client, std::string msg);
 void LoginHandle(int client , std::string msg);
 void RegisterHandle(int client,std::string msg);
