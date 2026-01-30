@@ -300,7 +300,7 @@ void searchForClient(int client , std::string msg) {
     json result = db.searchUsers(searchName,tokenHash);
 
         json json;
-        json["event"] = "SEARCH_FRIEND_RESULT";
+        json["event"] = "SEARCH_FRIEND_RESULT";                        
         json["names"] = result["names"];
         json["names_id"] = result["names_id"];
 		sendClientMsg(client, json);
@@ -337,17 +337,17 @@ void addFriendRequest(int client, std::string msg) {
 
 
 void acceptFriendRequest(int client, std::string msg) {
-    /*
+    
     json j = json::parse(msg);
     std::string token = j["token"];
     int toFriendId = j["toId"];
 
     std::string tokenHash = picosha2::hash256_hex_string(token);
-    std::cout << toFriend << " wants to accept " << token << "friend request " << std::endl;
+    std::cout << token << " wants to accept " << toFriendId << "friend request " << std::endl;
     
     db.acceptFriendRequest(toFriendId, tokenHash);
     updateAllClientData(client, token);
-*/}
+}
 
 
 

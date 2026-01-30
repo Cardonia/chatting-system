@@ -272,31 +272,22 @@ json Database::searchUsers(const std::string& name,const std::string& hash) {
 
 void Database::addFriendRequestTable(int friendId, const std::string& hashtoken) {
 	
-	sqlite3_stmt* stmt;
-	
-
-	std::string sqlSender = "SELECT id FROM users WHERE token = ?;";
-	int senderId = -1;
-	if (sqlite3_prepare_v2(db, sqlSender.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, hashtoken.c_str(), -1, SQLITE_STATIC);
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			senderId = sqlite3_column_int(stmt, 0);
-			std::cout<<"Sender ID: "<<senderId<<std::endl;
-		}
-		sqlite3_finalize(stmt);
-	}
-	//get sender id from token in users table
-
+	int senderId = whatUserIdIAM(hashtoken);
 	if (senderId == -1) {std::cout << "Invalid token, sender not found!" << std::endl;return;}
 
-	
-	
-	
+	sqlite3_stmt* stmt;
 
-	std::string sqlCheckForExisting = "SELECT 1 FROM friendships WHERE user_id = ? AND friend_id = ?;";
+	std::string sqlCheckForExisting = 
+	"SELECT 1 FROM friendships WHERE "
+	"(user_id = ? AND friend_id = ?) "
+   	"OR " 
+	"(user_id = ? AND friend_id = ?);";
+
 	if (sqlite3_prepare_v2(db, sqlCheckForExisting.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, senderId);
 		sqlite3_bind_int(stmt, 2, friendId);
+		sqlite3_bind_int(stmt, 3, friendId);
+		sqlite3_bind_int(stmt, 4, senderId);
 		std::cout<<"Sender ID: "<<senderId<<" / Reciver ID: "<<friendId<<std::endl;
 
 		if (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -309,27 +300,6 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 		}
 		sqlite3_finalize(stmt);
 	}
-
-
-	if (sqlite3_prepare_v2(db, sqlCheckForExisting.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, friendId);
-		sqlite3_bind_int(stmt, 2, senderId);
-
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			std::cout << "request friendship exist from past" << std::endl;
-			return;
-		
-		}
-		else {
-			std::cout << "request friendship don't exist from past" << std::endl;
-			
-		}
-		sqlite3_finalize(stmt);
-	}
-
-
-
-
 
 
 	std::string sqlInsert = "INSERT INTO friendships (user_id, friend_id, status) VALUES (?, ?, 'pending');";
@@ -365,11 +335,11 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 
 
 
-json Database::friendPendingRequest(const int clientId) {
+json Database::friendPendingRequest(const int& clientId) {
 	std::vector<std::string> names;
 	std::vector<int> names_id;
 
-	std::string sql = "SELECT user_id FROM friendships WHERE friend_id = ?;";
+	std::string sql = "SELECT user_id FROM friendships WHERE friend_id = ? AND status = 'pending';";
 	sqlite3_stmt* stmt;
 
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
@@ -419,56 +389,35 @@ json Database::friendPendingRequest(const int clientId) {
 
 
 void Database::acceptFriendRequest(const int& toFriendId, const std::string& hashToken) {
-	/*
+	
+	std::cout<<"'"<<hashToken<<"'"<<std::endl;
+	int senderId = whatUserIdIAM(hashToken);
+	if(senderId == -1){
+		std::cout<<"Debug: Faild userID for acceptFriendRequest: "<<senderId<<'\n';
+		return;
+	}
 	sqlite3_stmt* stmt;
-	std::string sqlFriendID = "SELECT id FROM users WHERE token = ?;";
-	int friendCode = -1;
-	if (sqlite3_prepare_v2(db, sqlFriendID.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, hashToken.c_str(), -1, SQLITE_STATIC);
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			friendCode = sqlite3_column_int(stmt, 0);
-		}
-		sqlite3_finalize(stmt);
-	}
 
-	if (friendCode == -1) {
-		std::cout << "Invalid token, friendID not found!" << std::endl;
-		return;
-	}
+	std::string sql = 
+	"UPDATE friendships SET status = 'accepted' WHERE "
+	"(user_id = ? AND friend_id = ? AND status = 'pending') "
+	"OR " 
+	"(friend_id = ? AND user_id = ? AND status = 'pending');";
 
-	// Step 2: Get sender ID from their username
-	std::string sqlSender = "SELECT id FROM users WHERE username = ?;";
-	int senderId = -1;
-	if (sqlite3_prepare_v2(db, sqlSender.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, friendName.c_str(), -1, SQLITE_STATIC);
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			senderId = sqlite3_column_int(stmt, 0);
-		}
-		sqlite3_finalize(stmt);
-	}
-
-	if (senderId == -1) {
-		std::cout << "Sender username not found!" << std::endl;
-		return;
-	}
-
-	// Step 3: Update the friendship status to 'accepted'
-	std::string sqlUpdate = "UPDATE friendships SET status = 'accepted' WHERE user_id = ? AND friend_id = ? AND status = 'pending';";
-	if (sqlite3_prepare_v2(db, sqlUpdate.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, senderId);
-		sqlite3_bind_int(stmt, 2, friendCode);
+		sqlite3_bind_int(stmt, 2, toFriendId);
+		sqlite3_bind_int(stmt, 3, toFriendId);
+		sqlite3_bind_int(stmt, 4, senderId);
 
 		if (sqlite3_step(stmt) == SQLITE_DONE) {
-			std::cout << "Friend request accepted from " << senderId << " to " << friendCode << std::endl;
+			std::cout << "Friend request accepted from " << senderId << " to " << toFriendId << std::endl;
 		}
 		else {
 			std::cout << "Failed to accept friend request!" << std::endl;
 		}
 		sqlite3_finalize(stmt);
 	}
-
-	*/
-	
 }
 
 
@@ -477,21 +426,23 @@ void Database::acceptFriendRequest(const int& toFriendId, const std::string& has
 
 
 
-int Database::whatUserIdIAM(const std::string hashToken) {
+int Database::whatUserIdIAM(const std::string& hashToken) {
+	std::cout<<"'"<<hashToken<<"'"<<std::endl;
+
 	sqlite3_stmt* stmt;
 	std::string sql = "SELECT id FROM users WHERE token = ?;";
 	int clientId = -1;
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, hashToken.c_str(), -1, SQLITE_STATIC);
+		std::cout << "w1" << std::endl;
+		sqlite3_bind_text(stmt, 1, hashToken.c_str(), -1, SQLITE_TRANSIENT);
 		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			std::cout << "w2" << std::endl;
 			clientId = sqlite3_column_int(stmt, 0);
 		}
 		sqlite3_finalize(stmt);
 	}
-	if (clientId == -1) {
-		std::cout << "Invalid token, id not found!" << std::endl;
-		return -1;
-	}
+	else std::cout << "Invalid token, id not found!" << std::endl;
+		
 	return  clientId;
 }
 

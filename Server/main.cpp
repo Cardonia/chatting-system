@@ -86,7 +86,7 @@ int main() {
     // start listening on port 5000 (server_fd), max 10 clients in queue
 
     std::cerr << "server listening on port 5000" << std::endl;
-
+    log("Server Started");
 	fd_set socket_list; 
     //declare socket list of sockets
 	//make a list for storing sockets 

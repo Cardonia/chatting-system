@@ -46,9 +46,9 @@ class Database {
 		void updateUserToken(const std::string& username, const std::string& token);
 		bool registerUser(const std::string& username, const std::string& passwordHash, const std::string& token);
 		void addFriendRequestTable(int friendId, const std::string& token);
-		int whatUserIdIAM(const std::string hashToken);
+		int whatUserIdIAM(const std::string& hashToken);
 		json searchUsers(const std::string& name,const std::string& hash);
-		json friendPendingRequest(const int clientId);
+		json friendPendingRequest(const int& clientId);
 		void acceptFriendRequest(const int& toFriendId, const std::string& hashtoken);
 
 
