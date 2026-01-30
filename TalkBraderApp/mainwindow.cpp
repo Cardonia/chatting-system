@@ -207,16 +207,34 @@ void MainWindow::runWhenDataReceived()
             qDebug()<<"FRIEND_REQUEST_PENDING_LIST";
 
             QJsonArray names = obj["names"].toArray();
+            //convert the json arrays to normal arrays
 
             QStringList nameList;
+            //QStringList is modified vector. has more functions.
 
-            for(const QJsonValue &val : names)
+            for (const QJsonValue &val : names) {
                 nameList.append(val.toString());
-
-            qDebug()<<"recived "<<nameList;
+            }
 
 
             int count = names.size();
+
+
+            //example
+            //namelist { sam }
+
+            QJsonArray names_id = obj["names_id"].toArray();
+            //convert the json arrays to normal arrays
+
+            QStringList name_id_List;
+            //QStringList is modified vector. has more functions.
+
+            for (const QJsonValue &val2 : names_id) {
+                name_id_List.append(QString::number(val2.toDouble()));
+            }
+
+
+
 
             QWidget *container = new QWidget;               // new container for buttons
             QVBoxLayout *layout = new QVBoxLayout(container);
@@ -226,13 +244,16 @@ void MainWindow::runWhenDataReceived()
                 QPushButton *b = new QPushButton(nameList[i]);
                 layout->addWidget(b);
 
-                connect(b, &QPushButton::clicked, this, [this, b]() {  // <-- capture 'this' too
-
+                connect(b, &QPushButton::clicked, this, [b,name_id_List,nameList]() {  // <-- capture 'this' too
+                    QString toId;
+                    for(int i = 0; i<nameList.size(); i++){
+                        if(b->text()==nameList[i]) toId = name_id_List[i];
+                    }
                     QJsonObject json;
                     json["event"]  = "ACCEPT_FRIEND_REQUEST";
                     json["token"]   = token;
-                    json["toName"] = b->text();
-                    qDebug() << "accept friend request to: " << b->text();
+                    json["toId"] = toId.toInt();
+                    qDebug() << "accept friend request to: " << toId.toInt()<<" id";
 
                     jsonSend(json);  // now works because 'this' is captured
 

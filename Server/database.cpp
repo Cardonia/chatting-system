@@ -230,7 +230,8 @@ bool Database::registerUser(const std::string& username, const std::string& pass
 
 
 
-json Database::searchUsers(const std::string& name) {
+json Database::searchUsers(const std::string& name,const std::string& hash) {
+	int senderTableID = whatUserIdIAM(hash);
 	std::vector<std::string> names;
 	std::vector<int> names_id;
 
@@ -243,7 +244,11 @@ json Database::searchUsers(const std::string& name) {
 
 		while (sqlite3_step(stmt) == SQLITE_ROW) {
 			int id = sqlite3_column_int(stmt, 0);
+			if(id==senderTableID)continue;
 			const char* username = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+			//char pointer , points to char in a text in memory 
+			//sqlite3_column_text(stmt, 1) return unsign char (positive 0-255) 
+			//reinterpret_cast<const char*> force to change type , tell cpp treat this as text 
 			if (username) {
 				names.push_back(username);
 				names_id.push_back(id);	
@@ -341,15 +346,15 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 		}
 		sqlite3_finalize(stmt);
 	}
-
-/*
-	if (onlineClients.find(hashtoken) != onlineClients.end()){
-		
-		int sock = onlineClients[hashtoken];
-		
-		updateAllClientData(sock, hashtoken);
+	//send update for the reciver friend request if online
+	auto it = onlineClients.find(hashtoken);
+	//return iterator(like pointer thing!!) if the hash exist in map
+	//iterator points to the element if found, else it point to last fake element by default
+	if (it != onlineClients.end()) {
+		//checks if the hash was found, if it wanst last fake element then it found it
+		int fd = it->second;
+		updateAllClientData(fd, hashtoken);
 	}
-*/
 }
 
 
@@ -360,43 +365,62 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 
 
 
+json Database::friendPendingRequest(const int clientId) {
+	std::vector<std::string> names;
+	std::vector<int> names_id;
 
-
-
-
-
-std::vector<std::string> Database::friendPendingRequest(const int clientId) {
-
-	
-	std::vector<std::string> results;
-	std::string sql = "SELECT users.username FROM friendships JOIN users ON friendships.user_id = users.id WHERE friendships.friend_id = ? AND friendships.status = 'pending';";
+	std::string sql = "SELECT user_id FROM friendships WHERE friend_id = ?;";
 	sqlite3_stmt* stmt;
 
-	int a = clientId;
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, clientId);
 
 		while (sqlite3_step(stmt) == SQLITE_ROW) {
-			const char* username = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-			if (username) {
-				results.push_back(username);
-			}
+			int id = sqlite3_column_int(stmt, 0);
+			names_id.push_back(id);
 		}
 		sqlite3_finalize(stmt);
 	}
-	return results;
+
+
+	
+	sql = "SELECT username FROM users WHERE id = ?;";
+	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+
+		for(int value : names_id){
+			sqlite3_bind_int(stmt, 1, value);
+			if (sqlite3_step(stmt) == SQLITE_ROW) {
+				const char* name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+				//char pointer , points to char in a text in memory 
+				//sqlite3_column_text(stmt, 1) return unsign char (positive 0-255) 
+				//reinterpret_cast<const char*> force to change type , tell cpp treat this as text 
+				if(name) names.push_back(name);
+			}
+			sqlite3_reset(stmt);
+		}
+		sqlite3_finalize(stmt);
+	}
+
+	json j;
+	j["names"] = names;
+	j["names_id"] = names_id;
+	return j;
 }
 
 
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void Database::acceptFriendRequest(const std::string& friendName, const std::string& hashToken) {
+
+
+
+
+void Database::acceptFriendRequest(const int& toFriendId, const std::string& hashToken) {
+	/*
 	sqlite3_stmt* stmt;
-	std::cout <<"hashToken" << hashToken << std::endl;
-	// Step 1: Get your user ID from your token
 	std::string sqlFriendID = "SELECT id FROM users WHERE token = ?;";
 	int friendCode = -1;
 	if (sqlite3_prepare_v2(db, sqlFriendID.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
@@ -443,6 +467,7 @@ void Database::acceptFriendRequest(const std::string& friendName, const std::str
 		sqlite3_finalize(stmt);
 	}
 
+	*/
 	
 }
 
