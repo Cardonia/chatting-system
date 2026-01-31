@@ -296,6 +296,7 @@ void searchForClient(int client , std::string msg) {
 		//checks if the fd was found, if it wanst last fake element then it found it
 	    tokenHash = it->second;
 	}
+    //get sender id in table via his stored hash in onlineClientsRE to prevent sender name in search result
 
     json result = db.searchUsers(searchName,tokenHash);
 
@@ -343,10 +344,10 @@ void acceptFriendRequest(int client, std::string msg) {
     int toFriendId = j["toId"];
 
     std::string tokenHash = picosha2::hash256_hex_string(token);
-    std::cout << token << " wants to accept " << toFriendId << "friend request " << std::endl;
+    std::cout << token << " wants to accept ID = " << toFriendId << " friend request " << std::endl;
     
     db.acceptFriendRequest(toFriendId, tokenHash);
-    updateAllClientData(client, token);
+    //updateAllClientData(client, token);
 }
 
 
@@ -386,18 +387,15 @@ void friendPendingRequestList(int client ,const std::string tokenHash) {
 
     int clientId = db.whatUserIdIAM(tokenHash);
 
-    std::cout<<"Debug: userID for friendPendingRequestList: "<<clientId<<'\n';
     if (clientId == -1) return;
     json result = db.friendPendingRequest(clientId);
+
+    if (result["names"].empty()) return;
 
     json json;
     json["event"] = "FRIEND_REQUEST_PENDING_LIST";
     json["names"] = result["names"];
     json["names_id"] = result["names_id"];
-
-    // Convert to string to send
-
-
 
     sendClientMsg(client, json);
 

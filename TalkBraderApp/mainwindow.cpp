@@ -244,7 +244,7 @@ void MainWindow::runWhenDataReceived()
                 QPushButton *b = new QPushButton(nameList[i]);
                 layout->addWidget(b);
 
-                connect(b, &QPushButton::clicked, this, [b,name_id_List,nameList]() {  // <-- capture 'this' too
+                connect(b, &QPushButton::clicked, this, [b,name_id_List,nameList]() {
                     QString toId;
                     for(int i = 0; i<nameList.size(); i++){
                         if(b->text()==nameList[i]) toId = name_id_List[i];
@@ -255,8 +255,8 @@ void MainWindow::runWhenDataReceived()
                     json["toId"] = toId.toInt();
                     qDebug() << "accept friend request to: " << toId.toInt()<<" id";
 
-                    jsonSend(json);  // now works because 'this' is captured
-
+                    jsonSend(json);
+                    b->deleteLater();
 
                 });
 

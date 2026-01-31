@@ -96,6 +96,11 @@ bool Database::execute(const std::string& sql) {
 
 
 ///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+
 
 bool Database::validateToken(const std::string& token) {
 	std::string sql = "SELECT 1 FROM users WHERE token = ?;";
@@ -331,6 +336,8 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -390,7 +397,7 @@ json Database::friendPendingRequest(const int& clientId) {
 
 void Database::acceptFriendRequest(const int& toFriendId, const std::string& hashToken) {
 	
-	std::cout<<"'"<<hashToken<<"'"<<std::endl;
+	
 	int senderId = whatUserIdIAM(hashToken);
 	if(senderId == -1){
 		std::cout<<"Debug: Faild userID for acceptFriendRequest: "<<senderId<<'\n';
@@ -400,15 +407,11 @@ void Database::acceptFriendRequest(const int& toFriendId, const std::string& has
 
 	std::string sql = 
 	"UPDATE friendships SET status = 'accepted' WHERE "
-	"(user_id = ? AND friend_id = ? AND status = 'pending') "
-	"OR " 
-	"(friend_id = ? AND user_id = ? AND status = 'pending');";
+	"user_id = ? AND friend_id = ? AND status = 'pending';";
 
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, senderId);
-		sqlite3_bind_int(stmt, 2, toFriendId);
-		sqlite3_bind_int(stmt, 3, toFriendId);
-		sqlite3_bind_int(stmt, 4, senderId);
+		sqlite3_bind_int(stmt, 1, toFriendId);
+		sqlite3_bind_int(stmt, 2, senderId);
 
 		if (sqlite3_step(stmt) == SQLITE_DONE) {
 			std::cout << "Friend request accepted from " << senderId << " to " << toFriendId << std::endl;
@@ -417,6 +420,10 @@ void Database::acceptFriendRequest(const int& toFriendId, const std::string& has
 			std::cout << "Failed to accept friend request!" << std::endl;
 		}
 		sqlite3_finalize(stmt);
+	}
+	else{
+		std::cout << "Failed to accept friend request! prepare_v2 failed" << std::endl;
+		return;
 	}
 }
 
@@ -427,16 +434,12 @@ void Database::acceptFriendRequest(const int& toFriendId, const std::string& has
 
 
 int Database::whatUserIdIAM(const std::string& hashToken) {
-	std::cout<<"'"<<hashToken<<"'"<<std::endl;
-
 	sqlite3_stmt* stmt;
 	std::string sql = "SELECT id FROM users WHERE token = ?;";
 	int clientId = -1;
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		std::cout << "w1" << std::endl;
-		sqlite3_bind_text(stmt, 1, hashToken.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(stmt, 1, hashToken.c_str(), -1, SQLITE_STATIC);
 		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			std::cout << "w2" << std::endl;
 			clientId = sqlite3_column_int(stmt, 0);
 		}
 		sqlite3_finalize(stmt);
