@@ -455,5 +455,84 @@ int Database::whatUserIdIAM(const std::string& hashToken) {
 
 
 
+json Database::getAllFriendsListFromTable(const int& clientId){
+	std::vector<std::string> names;
+	std::vector<int> names_id;
+
+	std::string sql = "SELECT user_id FROM friendships WHERE friend_id = ? AND status = 'accepted';";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, clientId);
+
+		while (sqlite3_step(stmt) == SQLITE_ROW) {
+			int id = sqlite3_column_int(stmt, 0);
+			names_id.push_back(id);
+		}
+		sqlite3_finalize(stmt);
+	}
+
+
+	
+	sql = "SELECT username FROM users WHERE id = ?;";
+	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+
+		for(int value : names_id){
+			sqlite3_bind_int(stmt, 1, value);
+			if (sqlite3_step(stmt) == SQLITE_ROW) {
+				const char* name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+				//char pointer , points to char in a text in memory 
+				//sqlite3_column_text(stmt, 1) return unsign char (positive 0-255) 
+				//reinterpret_cast<const char*> force to change type , tell cpp treat this as text 
+				if(name) names.push_back(name);
+			}
+			sqlite3_reset(stmt);
+		}
+		sqlite3_finalize(stmt);
+	}
+
+	json j;
+	j["names"] = names;
+	j["names_id"] = names_id;
+	return j;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+bool Database::checkIfTheyFriend(int& clientId , int& toFriendId){
+
+	sqlite3_stmt* stmt;
+
+	std::string sqlCheckForExisting = 
+	"SELECT 1 FROM friendships WHERE "
+	"(clientId = ? AND toFriendId = ?) "
+   	"OR " 
+	"(clientId = ? AND toFriendId = ?);";
+
+	if (sqlite3_prepare_v2(db, sqlCheckForExisting.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, clientId);
+		sqlite3_bind_int(stmt, 2, toFriendId);
+		sqlite3_bind_int(stmt, 3, toFriendId);
+		sqlite3_bind_int(stmt, 4, clientId);
+		
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			return true;
+		}
+		else {
+			return false;
+		}
+		sqlite3_finalize(stmt);
+	}
+	return false;
+} 
+
+
+
+
+
+
+
 
 

@@ -1,5 +1,4 @@
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+#pragma once
 
 #include <iostream>
 #include "sqlite3.h"
@@ -32,5 +31,6 @@ void addFriendRequest(int client, std::string msg);
 void friendPendingRequestList(int client, const std::string token);
 void updateAllClientData(int client, std::string token);
 void acceptFriendRequest(int client, std::string msg);
-
-#endif
+void getAllFriendsList(int& client ,const std::string& tokenHash);
+void handleChatRoom(int& client, const std::String& msg);
+#pragma once

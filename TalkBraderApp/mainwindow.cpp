@@ -251,7 +251,7 @@ void MainWindow::runWhenDataReceived()
                     }
                     QJsonObject json;
                     json["event"]  = "ACCEPT_FRIEND_REQUEST";
-                    json["token"]   = token;
+                    json["token"]  = token;
                     json["toId"] = toId.toInt();
                     qDebug() << "accept friend request to: " << toId.toInt()<<" id";
 
@@ -271,6 +271,73 @@ void MainWindow::runWhenDataReceived()
 
 
 
+
+        }else if(event=="ALL_FRIENDS_LIST"){
+            qDebug()<<"ALL_FRIENDS_LIST";
+
+            QJsonArray names = obj["names"].toArray();
+            //convert the json arrays to normal arrays
+
+            QStringList nameList;
+            //QStringList is modified vector. has more functions.
+
+            for (const QJsonValue &val : names) {
+                nameList.append(val.toString());
+            }
+
+
+            int count = names.size();
+
+
+            //example
+            //namelist { sam }
+
+            QJsonArray names_id = obj["names_id"].toArray();
+            //convert the json arrays to normal arrays
+
+            QStringList name_id_List;
+            //QStringList is modified vector. has more functions.
+
+            for (const QJsonValue &val2 : names_id) {
+                name_id_List.append(QString::number(val2.toDouble()));
+            }
+
+
+
+
+            QWidget *container = new QWidget;               // new container for buttons
+            QVBoxLayout *layout = new QVBoxLayout(container);
+
+            // Create buttons dynamically
+            for (int i = 0; i < count; ++i) {
+                QPushButton *b = new QPushButton(nameList[i]);
+                layout->addWidget(b);
+
+                connect(b, &QPushButton::clicked, this, [this,b,nameList,name_id_List]() {
+                    QString toId;
+                    for(int i = 0; i<nameList.size(); i++){
+                        if(b->text()==nameList[i]) toId = name_id_List[i];
+                    }
+                    QJsonObject json;
+                    json["event"]  = "OPEN_CHATROOM";
+                    json["token"]  = token;
+                    json["friendID"] = toId.toInt();
+                    qDebug() << "get chatroom msg for friend  " << toId.toInt()<<" id";
+
+                    jsonSend(json);
+
+                    ui->stackedWidget->setCurrentWidget(ui->chatRoom);
+
+                });
+
+            }
+            layout->addStretch();  // pushes buttons to top
+
+            container->setLayout(layout);
+
+            // Set the container to the scroll area from UI
+            ui->scrollArea_3->setWidget(container);
+            ui->scrollArea_3->setWidgetResizable(true);
 
         }
 
@@ -364,6 +431,10 @@ void MainWindow::on_registerBRegister_clicked()
 
 
 
+
+
+
+
 // go to add friend page
 void MainWindow::on_addFriendButton_clicked()
 {
@@ -416,4 +487,9 @@ void MainWindow::on_pushButton_4_clicked()
     ui->stackedWidget->setCurrentWidget(ui->chatPage);
 }
 
+
+void MainWindow::on_chatRoom_backButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->chatPage);
+}
 

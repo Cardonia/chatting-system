@@ -58,6 +58,8 @@ private slots:
 
     void on_pushButton_3_clicked();
 
+    void on_chatRoom_backButton_clicked();
+
 private:
     Ui::TalkBrader *ui;
     // Pointer to the UI elements created from the .ui file

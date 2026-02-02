@@ -1,5 +1,4 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#pragma once
 
 #include "sqlite3.h"
 #include <vector>
@@ -50,6 +49,8 @@ class Database {
 		json searchUsers(const std::string& name,const std::string& hash);
 		json friendPendingRequest(const int& clientId);
 		void acceptFriendRequest(const int& toFriendId, const std::string& hashtoken);
+		json getAllFriendsListFromTable(const int& clientId);
+		bool Database::checkIfTheyFriend(int& clientId , int& toFriendId);
 
 
 
@@ -61,5 +62,3 @@ class Database {
 };
 
 
-
-#endif 
