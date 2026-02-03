@@ -493,3 +493,17 @@ void MainWindow::on_chatRoom_backButton_clicked()
     ui->stackedWidget->setCurrentWidget(ui->chatPage);
 }
 
+
+void MainWindow::on_chatRoom_sendButton_clicked()
+{
+    QString text = ui->typing_bar->text();
+    ui->typing_bar->clear();
+    if(text.length()==0)return;
+    QListWidgetItem* item = new QListWidgetItem(text);
+
+    item->setTextAlignment(Qt::AlignRight);
+
+    ui->chatRoom_listWidget->addItem(item);
+
+}
+

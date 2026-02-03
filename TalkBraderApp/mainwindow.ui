@@ -592,16 +592,6 @@
        </layout>
       </widget>
       <widget class="QWidget" name="chatRoom">
-       <widget class="QListView" name="chatRoom_listView">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>40</y>
-          <width>651</width>
-          <height>541</height>
-         </rect>
-        </property>
-       </widget>
        <widget class="QLabel" name="chatRoom_friendName">
         <property name="geometry">
          <rect>
@@ -625,7 +615,40 @@
          </rect>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>BACK</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="chatRoom_sendButton">
+        <property name="geometry">
+         <rect>
+          <x>540</x>
+          <y>540</y>
+          <width>91</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>SEND</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="typing_bar">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>540</y>
+          <width>511</width>
+          <height>41</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QListWidget" name="chatRoom_listWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>621</width>
+          <height>461</height>
+         </rect>
         </property>
        </widget>
       </widget>
