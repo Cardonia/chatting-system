@@ -33,4 +33,6 @@ void updateAllClientData(int client, std::string token);
 void acceptFriendRequest(int client, std::string msg);
 void getAllFriendsList(int& client ,const std::string& tokenHash);
 void handleChatRoom(int& client, const std::String& msg);
+void handleChatRoomMessage(int client, const std::string& msg);
+handleUserSendMessage(int& client,const std::string& msg);
 #pragma once

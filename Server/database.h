@@ -51,6 +51,8 @@ class Database {
 		void acceptFriendRequest(const int& toFriendId, const std::string& hashtoken);
 		json getAllFriendsListFromTable(const int& clientId);
 		bool Database::checkIfTheyFriend(int& clientId , int& toFriendId);
+		void Database::storeChatMessage(const int* fromID,const int* toID,const std::String* text);
+		std::string Database::getTokenFromID(const int& userID);
 
 
 

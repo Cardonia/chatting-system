@@ -3,15 +3,21 @@
 #include "jsonSendServer.h"
 #include "publicVariables.h"
 #include "socketManager.h"
+#include "chatroom.h";
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QTcpSocket>
 #include <QObject>
 #include <QSettings>
 #include <QString>
+#include <QMap>
 #include <QPushButton>
 #include <QJsonArray>
 #include <QCryptographicHash>
+
+QMap<int, ChatRoom> chatRooms;
+
+int globalFriendId=0;
 
 //constructor
 MainWindow::MainWindow() : QMainWindow(nullptr)
@@ -169,7 +175,7 @@ void MainWindow::runWhenDataReceived()
             //example
             //name_id_List {1}
 
-            QWidget *container = new QWidget;               // new container for buttons
+            QWidget *container = new QWidget;
             QVBoxLayout *layout = new QVBoxLayout(container);
 
             // Create buttons dynamically
@@ -194,11 +200,10 @@ void MainWindow::runWhenDataReceived()
                 });
 
             }
-            layout->addStretch();  // pushes buttons to top
+            layout->addStretch();
 
             container->setLayout(layout);
 
-            // Set the container to the scroll area from UI
             ui->scrollArea->setWidget(container);
             ui->scrollArea->setWidgetResizable(true);
 
@@ -236,7 +241,7 @@ void MainWindow::runWhenDataReceived()
 
 
 
-            QWidget *container = new QWidget;               // new container for buttons
+            QWidget *container = new QWidget;
             QVBoxLayout *layout = new QVBoxLayout(container);
 
             // Create buttons dynamically
@@ -261,11 +266,10 @@ void MainWindow::runWhenDataReceived()
                 });
 
             }
-            layout->addStretch();  // pushes buttons to top
+            layout->addStretch();
 
             container->setLayout(layout);
 
-            // Set the container to the scroll area from UI
             ui->scrollArea_2->setWidget(container);
             ui->scrollArea_2->setWidgetResizable(true);
 
@@ -305,7 +309,7 @@ void MainWindow::runWhenDataReceived()
 
 
 
-            QWidget *container = new QWidget;               // new container for buttons
+            QWidget *container = new QWidget;
             QVBoxLayout *layout = new QVBoxLayout(container);
 
             // Create buttons dynamically
@@ -318,6 +322,13 @@ void MainWindow::runWhenDataReceived()
                     for(int i = 0; i<nameList.size(); i++){
                         if(b->text()==nameList[i]) toId = name_id_List[i];
                     }
+                    int id = toId.toInt();
+
+                    if(!chatRooms.contains(id)){
+                        chatRooms[id] = ChatRoom(id, b->text());
+
+                        // ask server for history
+                    }
                     QJsonObject json;
                     json["event"]  = "OPEN_CHATROOM";
                     json["token"]  = token;
@@ -325,17 +336,16 @@ void MainWindow::runWhenDataReceived()
                     qDebug() << "get chatroom msg for friend  " << toId.toInt()<<" id";
 
                     jsonSend(json);
-
+                    globalFriendId = toId.toInt();
                     ui->stackedWidget->setCurrentWidget(ui->chatRoom);
 
                 });
 
             }
-            layout->addStretch();  // pushes buttons to top
+            layout->addStretch();
 
             container->setLayout(layout);
 
-            // Set the container to the scroll area from UI
             ui->scrollArea_3->setWidget(container);
             ui->scrollArea_3->setWidgetResizable(true);
 
@@ -504,6 +514,16 @@ void MainWindow::on_chatRoom_sendButton_clicked()
     item->setTextAlignment(Qt::AlignRight);
 
     ui->chatRoom_listWidget->addItem(item);
+
+    QJsonObject json;
+    json["event"] = "USER_SEND_MESSAGE";
+    json["friendID"] = globalFriendId
+        ;
+    json["token"] = token;
+    json["text"] = text;
+
+    jsonSend(json);
+
 
 }
 

@@ -138,3 +138,33 @@
 2026-01-31 00:56:44 / Search For Friend , FD = 5
 2026-01-31 00:56:46 / Add friend request to 3 id , FD = 5
 2026-01-31 00:58:51 /  Token , FD = 
+2026-02-03 23:02:41 / Register , FD = 5
+2026-02-03 23:02:41 / Register = Success, FD = 5
+2026-02-03 23:03:19 / Search For Friend , FD = 5
+2026-02-03 23:03:25 / Search For Friend , FD = 5
+2026-02-03 23:03:31 / Add friend request to 11 id , FD = 5
+2026-02-03 23:04:10 / Login , FD = 5
+2026-02-03 23:04:10 / Login = Success, FD = 5
+2026-02-03 23:04:23 /  Token , FD = 
+2026-02-03 23:04:23 / Check Token = Valid , FD = 5
+2026-02-03 23:25:48 /  Token , FD = 
+2026-02-03 23:25:48 / Check Token = Valid , FD = 5
+2026-02-03 23:29:29 /  Token , FD = 
+2026-02-03 23:29:29 / Check Token = Valid , FD = 5
+2026-02-03 23:31:04 / Token , FD = 
+2026-02-03 23:31:04 / Check Token = Valid , FD = 6
+2026-02-03 23:33:18 / Register , FD = 7
+2026-02-03 23:33:18 / Register = Success, FD = 7
+2026-02-03 23:33:50 / Search For Friend , FD = 7
+2026-02-03 23:33:51 / Add friend request to 11 id , FD = 7
+2026-02-03 23:34:41 / Search For Friend , FD = 6
+2026-02-03 23:34:42 / Add friend request to 15 id , FD = 6
+2026-02-03 23:34:49 /  Token , FD = 
+2026-02-03 23:34:49 / Check Token = Valid , FD = 5
+2026-02-03 23:35:19 / Add friend request to 15 id , FD = 6
+2026-02-03 23:37:20 /  Token , FD = 
+2026-02-03 23:37:20 / Check Token = Valid , FD = 5
+2026-02-03 23:37:36 / Token , FD = 
+2026-02-03 23:37:36 / Check Token = Valid , FD = 6
+2026-02-03 23:38:00 /  Token , FD = 
+2026-02-03 23:38:00 / Check Token = Valid , FD = 5

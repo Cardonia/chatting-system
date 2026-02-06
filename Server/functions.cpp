@@ -34,7 +34,7 @@ std::unordered_map<std::string, int>EventMap = {
     {"SEARCH_FRIEND" , 5},
     {"SEND_FRIEND_REQUEST" , 6},
     {"ACCEPT_FRIEND_REQUEST" , 7},
-    {"OPEN_CHATROOM" , 8}
+    {"USER_SEND_MESSAGE" , 8}
 
 };
 
@@ -46,10 +46,7 @@ std::map<std::string, int> onlineClients;
 //for storing online clients with token and socket_fd
 std::map<int , std::string> onlineClientsRE;
 
-std::map<std::pair<int, int>, ChatRoom> rooms;
-//map key , value
-//pair = 2 user id sorted 
-// 2 vlaue pair  , chatroom obj
+
 
 void sendClientMsg(int client, json jsonObject) {
 
@@ -116,9 +113,9 @@ void handleClientEvent(int client, std::string msg) {
             break;
 
         case 8;
-            std::cout << "case OPEN_CHATROOM called\n";
-            handleChatRoom(client,msg);
-
+            std::cout << "case USER_SEND_MESSAGE called\n";
+            handleUserSendMessage(client,msg);
+            break;
         default: std::cout << "unknown code\n";
         }
     
@@ -359,6 +356,7 @@ void acceptFriendRequest(int client, std::string msg) {
     
     db.acceptFriendRequest(toFriendId, tokenHash);
     //updateAllClientData(client, token);
+    getAllFriendsList(client,token);
 }
 
 
@@ -416,7 +414,10 @@ void friendPendingRequestList(int client ,const std::string tokenHash) {
 
 
 
+
 //////////////////////////////////////////////////
+
+
 
 
 
@@ -444,61 +445,61 @@ void getAllFriendsList(int& client ,const std::string& tokenHash){
 
 
 
-
-////////////////////////////////////////////////
-
+  
 
 
+//////////////////////////////////////////////////
 
-void handleChatRoom(int& client, const std::String& msg){
 
-    std::string a ;
-    std::string b ;
 
+
+
+
+
+void handleUserSendMessage(int& client,const std::string& msg){
     json j = json::parse(msg);
     std::string token = j["token"];
-    int toFriendId = j["friendID"];
+    int toID = j["friendID"];
+    std::string text = j["text"];
 
-    std::string hashToken = picosha2::hash256_hex_string(token);
-    int clientId = whatUserIdIAM(hashToken);
+    int fromID = whatUserIdIAM(picosha2::hash256_hex_string(token));
 
-    bool areTheyFriend = false
+    bool areTheyFriend = false;
 
     areTheyFriend = db.checkIfTheyFriend(clientId , toFriendId); 
-    if(areTheyFriend){
-        int a = clientId;
-        int b = toFriendId;
-        if (a > b) std::swap(a, b);
 
-        auto key = std::make_pair(a, b);
+    if(!areTheyFriend) return;
 
-        if(rooms.find(key) == rooms.end()){
+    std::cout<<"Debug: storing msg...."<<'\n';
 
-            rooms.emplace(key , ChatRoom(a , b));
-            //emplace faster way to insert into map
-            //because of it constructs the ChatRoom directly inside the map instead of making a temporary and copying it
-        }
-        ChatRoom &room = rooms[key];  // get the room
+    db.storeChatMessage(fromID,toID,text);
 
-        for (auto &msgObj : room.getMessages()) {
-            //sendToClient(client, msgObj.text);
-        }
+    std::string friendToken = db.getTokenFromID(toID);
 
+    if (onlineClients.find(friendToken) != onlineClients.end()) {
+        int socket = onlineClients[friendToken];  
+        
+        json json;
+        json["event"] = "YOU_GOT_MESSAGE";
+        json["fromID"] = fromID;
+        json["text"] = text;
 
+        sendToClient(socket,json);
+    } 
+    else {
+        std::cout << "User is not online"<<'\n';
     }
-    else{
-        std::cout<<"Debug chat request for not friend persion"<<'\n';
-    }
-
-
 }
 
 
 
 
 
+
+
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
+
 
 
 

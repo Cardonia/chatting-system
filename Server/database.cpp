@@ -78,6 +78,17 @@ void Database::initializeDatabase() {
 
 	execute(sql2);
 
+	const char* sql3 = 
+	"CREATE TABLE IF NOT EXISTS messages ("
+    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+    "from_user_id INTEGER NOT NULL,"
+    "to_user_id INTEGER NOT NULL,"
+    "text TEXT NOT NULL,"
+    "datetime DATETIME DEFAULT CURRENT_TIMESTAMP"
+	");";
+
+	execute(sql3);
+
 }
 
 
@@ -530,9 +541,52 @@ bool Database::checkIfTheyFriend(int& clientId , int& toFriendId){
 
 
 
+/////////////////////////////////////////////////////////
 
 
 
 
+
+
+void Database::storeChatMessage(const int* fromID,const int* toID,const std::String* text){
+	std::string sql = "INSERT INTO messages (from_user_id , to_user_id , text) VALUES (?, ?, ?);";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+		sqlite3_bind_text(stmt, 1, fromID.c_str(), -1, SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 2, toID.c_str(), -1, SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 3, text.c_str(), -1, SQLITE_STATIC);
+
+		if (sqlite3_step(stmt) == SQLITE_DONE) {
+			std::cout<<"message saved"<<'\n';
+		}
+		sqlite3_finalize(stmt);
+	}
+}
+
+
+
+
+/////////////////////////////////////////////////////////////
+
+
+
+
+std::string Database::getTokenFromID(const int& userID){
+
+	std::string sql = "SELECT token FROM users WHERE id = ?;";
+	sqlite3_stmt* stmt = nullptr;
+    std::string token = "";
+
+	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, userID);
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			const unsigned char* temp = sqlite3_column_text(stmt, 0);
+            if(temp) token = reinterpret_cast<const char*>(temp);
+		}
+	}
+	if(stmt) sqlite3_finalize(stmt);
+	return token;
+}
 
 
