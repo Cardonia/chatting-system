@@ -7,6 +7,14 @@
 #include "json.hpp"
 using json = nlohmann::json;
 
+
+
+struct Message{
+    bool fromMe;
+    std::string text;
+};
+
+
 class Database {
 	private:
 		sqlite3* db;
@@ -50,9 +58,10 @@ class Database {
 		json friendPendingRequest(const int& clientId);
 		void acceptFriendRequest(const int& toFriendId, const std::string& hashtoken);
 		json getAllFriendsListFromTable(const int& clientId);
-		bool Database::checkIfTheyFriend(int& clientId , int& toFriendId);
-		void Database::storeChatMessage(const int* fromID,const int* toID,const std::String* text);
-		std::string Database::getTokenFromID(const int& userID);
+		bool checkIfTheyFriend(int& clientId , int& toFriendId);
+		void storeChatMessage(const int* fromID,const int* toID,const std::string* text);
+		std::string getTokenFromID(const int& userID);
+		std::vector<Message> getChatHistory(int myId, int friendId);
 
 
 

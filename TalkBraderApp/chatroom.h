@@ -9,8 +9,8 @@ struct Message {
     QString text;
 };
 
-class ChatRoom
-{
+class ChatRoom{
+
 public:
     ChatRoom(int id, const QString &name);
 

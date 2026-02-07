@@ -5,6 +5,8 @@
 #include "json.hpp"
 using json = nlohmann::json;
 
+
+
 Database& Database::getInstance(const std::string& path) {
 	//Database& =reference to a Database object.
 	//Database::getInstance mean getInstance function is from Database class
@@ -548,7 +550,7 @@ bool Database::checkIfTheyFriend(int& clientId , int& toFriendId){
 
 
 
-void Database::storeChatMessage(const int* fromID,const int* toID,const std::String* text){
+void Database::storeChatMessage(const int* fromID,const int* toID,const std::string* text){
 	std::string sql = "INSERT INTO messages (from_user_id , to_user_id , text) VALUES (?, ?, ?);";
 	sqlite3_stmt* stmt;
 
@@ -589,4 +591,55 @@ std::string Database::getTokenFromID(const int& userID){
 	return token;
 }
 
+
+
+
+/////////////////////////////////////////////////////////////
+
+
+
+
+
+
+std::vector<Message> Database::getChatHistory(int myId, int friendId){
+	std::vector<Message> msgs;
+	std::string sql = 
+	"SELECT from_user_id, to_user_id, text "
+	"FROM messages "
+	"WHERE " 
+	"(from_user_id = ? AND to_user_id = ?) "
+	"OR "
+	"(from_user_id = ? AND to_user_id = ?) "
+	"ORDER BY time LIMIT 50;";
+	sqlite3_stmt* stmt = nullptr;
+
+	 if(sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK){
+
+        sqlite3_bind_int(stmt, 1, myId);
+        sqlite3_bind_int(stmt, 2, friendId);
+        sqlite3_bind_int(stmt, 3, friendId);
+        sqlite3_bind_int(stmt, 4, myId);
+
+        while(sqlite3_step(stmt) == SQLITE_ROW){
+			int sender = sqlite3_column_int(stmt, 0);
+            const unsigned char* txt = sqlite3_column_text(stmt, 2);
+
+			 Message m;
+			 if(sender == myId)
+				m.fromMe = true;
+			else
+				m.fromMe = false;
+
+			if(txt)
+				m.text = (const char*)txt;
+			else
+				m.text = "";
+
+            msgs.push_back(m);
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    return msgs;
+}	
 

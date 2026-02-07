@@ -1,6 +1,5 @@
 #include "functions.h"
 #include "database.h"
-#include "chatRoom.h"
 #include "picosha2.h"
 #include <iostream>
 #include <cstdlib>
@@ -34,7 +33,8 @@ std::unordered_map<std::string, int>EventMap = {
     {"SEARCH_FRIEND" , 5},
     {"SEND_FRIEND_REQUEST" , 6},
     {"ACCEPT_FRIEND_REQUEST" , 7},
-    {"USER_SEND_MESSAGE" , 8}
+    {"USER_SEND_MESSAGE" , 8},
+    {"GET_HISTORY_MESSAGES",9}
 
 };
 
@@ -112,10 +112,16 @@ void handleClientEvent(int client, std::string msg) {
             acceptFriendRequest(client,msg);
             break;
 
-        case 8;
+        case 8:
             std::cout << "case USER_SEND_MESSAGE called\n";
             handleUserSendMessage(client,msg);
             break;
+
+        case 9:
+            handleChatHistory(client,msg);
+            std::cout << "case GET_HISTORY_MESSAGES called\n";
+            break;
+
         default: std::cout << "unknown code\n";
         }
     
@@ -423,7 +429,7 @@ void friendPendingRequestList(int client ,const std::string tokenHash) {
 
 
 
-void getAllFriendsList(int& client ,const std::string& tokenHash){
+void getAllFriendsList(int client ,const std::string& tokenHash){
     int clientId = db.whatUserIdIAM(tokenHash);
     if (clientId == -1){
         std::cout<<"Debug: getAllFriendsList - whatUserIdIAM ERROR"<<'\n';
@@ -456,17 +462,19 @@ void getAllFriendsList(int& client ,const std::string& tokenHash){
 
 
 
-void handleUserSendMessage(int& client,const std::string& msg){
+void handleUserSendMessage(int client,const std::string& msg){
     json j = json::parse(msg);
     std::string token = j["token"];
     int toID = j["friendID"];
     std::string text = j["text"];
 
-    int fromID = whatUserIdIAM(picosha2::hash256_hex_string(token));
+    std::string tokenHash = picosha2::hash256_hex_string(token);
+
+    int fromID = whatUserIdIAM(tokenHash);
 
     bool areTheyFriend = false;
 
-    areTheyFriend = db.checkIfTheyFriend(clientId , toFriendId); 
+    areTheyFriend = db.checkIfTheyFriend(fromID , toID); 
 
     if(!areTheyFriend) return;
 
@@ -484,11 +492,46 @@ void handleUserSendMessage(int& client,const std::string& msg){
         json["fromID"] = fromID;
         json["text"] = text;
 
-        sendToClient(socket,json);
+        sendClientMsg(socket,json);
     } 
     else {
         std::cout << "User is not online"<<'\n';
     }
+}
+
+
+
+
+
+
+
+////////////////////////////////////////////////////
+
+
+
+
+
+
+void handleChatHistory(int client, const std::string& msg){
+    json j = json::parse(msg);
+    std::string token = j["token"];
+    int toID = j["friendID"];
+    std::string tokenHash = picosha2::hash256_hex_string(token);
+    int fromID = whatUserIdIAM(tokenHash);
+
+    std::vector<Message> msgs= db.getChatHistory(fromID,toID);
+
+
+    json j2 = json::array();
+
+    for(const auto& m : msgs){
+        j2.push_back({
+            {"fromMe", m.fromMe},
+            {"text", m.text}
+        });
+    }
+
+    sendClientMsg(client,j2);
 }
 
 

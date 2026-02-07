@@ -3,7 +3,7 @@
 #include "jsonSendServer.h"
 #include "publicVariables.h"
 #include "socketManager.h"
-#include "chatroom.h";
+#include "chatroom.h"
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QTcpSocket>
@@ -15,7 +15,7 @@
 #include <QJsonArray>
 #include <QCryptographicHash>
 
-QMap<int, ChatRoom> chatRooms;
+QMap<int, ChatRoom> chatRoomsMap;
 
 int globalFriendId=0;
 
@@ -324,19 +324,19 @@ void MainWindow::runWhenDataReceived()
                     }
                     int id = toId.toInt();
 
-                    if(!chatRooms.contains(id)){
-                        chatRooms[id] = ChatRoom(id, b->text());
+                    if(!chatRoomsMap.contains(id)){
+                       chatRoomsMap.insert(id, ChatRoom(id, b->text()));
 
-                        // ask server for history
+                        QJsonObject json;
+                        json["event"]  = "GET_HISTORY_MESSAGES";
+                        json["token"]  = token;
+                        json["friendID"] = toId.toInt();
+                        qDebug() << "get old chatroom msg for friend  " << toId.toInt()<<" id";
+                        jsonSend(json);
                     }
-                    QJsonObject json;
-                    json["event"]  = "OPEN_CHATROOM";
-                    json["token"]  = token;
-                    json["friendID"] = toId.toInt();
-                    qDebug() << "get chatroom msg for friend  " << toId.toInt()<<" id";
 
-                    jsonSend(json);
                     globalFriendId = toId.toInt();
+                    ui->chatRoom_listWidget->clear();
                     ui->stackedWidget->setCurrentWidget(ui->chatRoom);
 
                 });

@@ -16,6 +16,13 @@ using json = nlohmann::json;
 #include "picosha2.h"
 #include "database.h" 
 
+
+struct Message{
+    bool fromMe;
+    std::string text;
+};
+
+
 extern std::map<std::string, int> onlineClients;
 
 void log(const std::string& msg);
@@ -31,8 +38,9 @@ void addFriendRequest(int client, std::string msg);
 void friendPendingRequestList(int client, const std::string token);
 void updateAllClientData(int client, std::string token);
 void acceptFriendRequest(int client, std::string msg);
-void getAllFriendsList(int& client ,const std::string& tokenHash);
-void handleChatRoom(int& client, const std::String& msg);
-void handleChatRoomMessage(int client, const std::string& msg);
-handleUserSendMessage(int& client,const std::string& msg);
+void getAllFriendsList(int client ,const std::string& tokenHash);
+void handleChatRoom(int client, const std::string& msg);
+//void handleChatRoomMessage(int client, const std::string& msg);
+void handleUserSendMessage(int client,const std::string& msg);
+void handleChatHistory(int client, const std::string& msg);
 #pragma once
