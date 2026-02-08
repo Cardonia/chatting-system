@@ -12,6 +12,7 @@ struct Message {
 class ChatRoom{
 
 public:
+    ChatRoom() = default;
     ChatRoom(int id, const QString &name);
 
     int friendId;

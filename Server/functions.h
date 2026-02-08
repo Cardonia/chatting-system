@@ -17,11 +17,6 @@ using json = nlohmann::json;
 #include "database.h" 
 
 
-struct Message{
-    bool fromMe;
-    std::string text;
-};
-
 
 extern std::map<std::string, int> onlineClients;
 

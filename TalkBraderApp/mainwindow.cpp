@@ -330,14 +330,15 @@ void MainWindow::runWhenDataReceived()
                         QJsonObject json;
                         json["event"]  = "GET_HISTORY_MESSAGES";
                         json["token"]  = token;
-                        json["friendID"] = toId.toInt();
-                        qDebug() << "get old chatroom msg for friend  " << toId.toInt()<<" id";
+                        json["friendID"] = id;
+                        qDebug() << "get old chatroom msg for friend  " << id <<" id";
                         jsonSend(json);
                     }
 
-                    globalFriendId = toId.toInt();
+                    globalFriendId = id;
                     ui->chatRoom_listWidget->clear();
                     ui->stackedWidget->setCurrentWidget(ui->chatRoom);
+                    updateChatRoom();
 
                 });
 
@@ -349,8 +350,34 @@ void MainWindow::runWhenDataReceived()
             ui->scrollArea_3->setWidget(container);
             ui->scrollArea_3->setWidgetResizable(true);
 
-        }
 
+
+
+
+
+        }
+        else if(event == "GOT_HISTORY_MESSAGES"){
+            qDebug()<<"GOT_HISTORY_MESSAGES";
+
+            int id = obj["for_friend_id"].toInt();
+            if(chatRoomsMap.contains(id)){
+                ChatRoom &roomObj = chatRoomsMap[id];
+                QJsonArray msgs = obj.value("messages").toArray();
+                for(const QJsonValue &v : msgs){
+                    QJsonObject mObj = v.toObject();
+
+                    Message m;
+                    m.fromMe = mObj.value("fromMe").toBool();
+                    m.text   = mObj.value("text").toString();
+
+                    roomObj.addMessage(m);
+                }
+                if(id == globalFriendId) updateChatRoom();
+            }
+
+
+
+        }
     }
 }
 
@@ -514,16 +541,43 @@ void MainWindow::on_chatRoom_sendButton_clicked()
     item->setTextAlignment(Qt::AlignRight);
 
     ui->chatRoom_listWidget->addItem(item);
+    if(chatRoomsMap.contains(globalFriendId)){
+        Message m;
+        m.fromMe = true;
+        m.text = text;
+        chatRoomsMap[globalFriendId].addMessage(m);
+    }
+
+
 
     QJsonObject json;
     json["event"] = "USER_SEND_MESSAGE";
-    json["friendID"] = globalFriendId
-        ;
+    json["friendID"] = globalFriendId;
     json["token"] = token;
     json["text"] = text;
 
     jsonSend(json);
+     qDebug()<<"send request for new message";
+
+}
 
 
+
+
+void MainWindow::updateChatRoom(){
+    if(chatRoomsMap.contains(globalFriendId)){
+        ChatRoom &roomObj = chatRoomsMap[globalFriendId];
+        for(const Message &msg : roomObj.messages){
+            QListWidgetItem* item = new QListWidgetItem(msg.text);
+
+            if(msg.fromMe)
+                item->setTextAlignment(Qt::AlignRight);
+            else
+                item->setTextAlignment(Qt::AlignLeft);
+
+            ui->chatRoom_listWidget->addItem(item);
+        }
+
+    }
 }
 

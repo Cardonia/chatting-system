@@ -520,9 +520,9 @@ bool Database::checkIfTheyFriend(int& clientId , int& toFriendId){
 
 	std::string sqlCheckForExisting = 
 	"SELECT 1 FROM friendships WHERE "
-	"(clientId = ? AND toFriendId = ?) "
+	"((user_id = ? AND friend_id = ?) "
    	"OR " 
-	"(clientId = ? AND toFriendId = ?);";
+	"(user_id = ? AND friend_id = ?)) AND status =  'accepted';";
 
 	if (sqlite3_prepare_v2(db, sqlCheckForExisting.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, clientId);
@@ -550,13 +550,13 @@ bool Database::checkIfTheyFriend(int& clientId , int& toFriendId){
 
 
 
-void Database::storeChatMessage(const int* fromID,const int* toID,const std::string* text){
+void Database::storeChatMessage(int fromID,int toID, std::string text){
 	std::string sql = "INSERT INTO messages (from_user_id , to_user_id , text) VALUES (?, ?, ?);";
 	sqlite3_stmt* stmt;
 
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, fromID.c_str(), -1, SQLITE_STATIC);
-		sqlite3_bind_text(stmt, 2, toID.c_str(), -1, SQLITE_STATIC);
+		sqlite3_bind_int(stmt, 1, fromID);
+		sqlite3_bind_int(stmt, 2, toID);
 		sqlite3_bind_text(stmt, 3, text.c_str(), -1, SQLITE_STATIC);
 
 		if (sqlite3_step(stmt) == SQLITE_DONE) {
@@ -610,7 +610,7 @@ std::vector<Message> Database::getChatHistory(int myId, int friendId){
 	"(from_user_id = ? AND to_user_id = ?) "
 	"OR "
 	"(from_user_id = ? AND to_user_id = ?) "
-	"ORDER BY time LIMIT 50;";
+	"ORDER BY datetime LIMIT 50;";
 	sqlite3_stmt* stmt = nullptr;
 
 	 if(sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK){

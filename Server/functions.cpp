@@ -460,22 +460,23 @@ void getAllFriendsList(int client ,const std::string& tokenHash){
 
 
 
-
-
 void handleUserSendMessage(int client,const std::string& msg){
+    std::cout<<"Debug: handleUserSendMessage called "<<'\n';
+        
+    
     json j = json::parse(msg);
-    std::string token = j["token"];
     int toID = j["friendID"];
+    std::string token = j["token"];
     std::string text = j["text"];
 
     std::string tokenHash = picosha2::hash256_hex_string(token);
 
-    int fromID = whatUserIdIAM(tokenHash);
+    int fromID = db.whatUserIdIAM(tokenHash);
 
     bool areTheyFriend = false;
 
     areTheyFriend = db.checkIfTheyFriend(fromID , toID); 
-
+    std::cout<<"Debug: areTheyFriend/ "<<areTheyFriend<<"  fromID/ "<<fromID<< "  toID/ "<<toID <<'\n';
     if(!areTheyFriend) return;
 
     std::cout<<"Debug: storing msg...."<<'\n';
@@ -517,19 +518,39 @@ void handleChatHistory(int client, const std::string& msg){
     std::string token = j["token"];
     int toID = j["friendID"];
     std::string tokenHash = picosha2::hash256_hex_string(token);
-    int fromID = whatUserIdIAM(tokenHash);
+    int fromID = db.whatUserIdIAM(tokenHash);
 
     std::vector<Message> msgs= db.getChatHistory(fromID,toID);
 
 
-    json j2 = json::array();
+
+    if (msgs.empty()) {
+        std::cout << "No messages.\n";
+    } else {
+        for (const Message& msg : msgs) {
+            std::cout << (msg.fromMe ? "Me: " : "Other: ") << msg.text << std::endl;
+        }
+    }
+
+
+  
+
+
+
+    json j2 ;
+    j2["event"] = "GOT_HISTORY_MESSAGES";
+    j2["for_friend_id"] = toID; 
+
+    json messages = json::array(); 
 
     for(const auto& m : msgs){
-        j2.push_back({
+         messages.push_back({
             {"fromMe", m.fromMe},
             {"text", m.text}
         });
     }
+
+    j2["messages"] = messages; 
 
     sendClientMsg(client,j2);
 }

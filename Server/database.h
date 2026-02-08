@@ -59,7 +59,7 @@ class Database {
 		void acceptFriendRequest(const int& toFriendId, const std::string& hashtoken);
 		json getAllFriendsListFromTable(const int& clientId);
 		bool checkIfTheyFriend(int& clientId , int& toFriendId);
-		void storeChatMessage(const int* fromID,const int* toID,const std::string* text);
+		void storeChatMessage(int fromID,int toID,std::string text);
 		std::string getTokenFromID(const int& userID);
 		std::vector<Message> getChatHistory(int myId, int friendId);
 
