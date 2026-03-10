@@ -388,7 +388,6 @@ void MainWindow::runWhenDataReceived()
                 ChatRoom &roomObj = chatRoomsMap[id];
                 addOneChatMessage(id , text);
 
-
                 Message m;
                 m.fromMe = false;
                 m.text   = text;
