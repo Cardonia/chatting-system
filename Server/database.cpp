@@ -296,6 +296,13 @@ void Database::acceptFriendRequest(const int& toFriendId, const std::string& has
 		return;
 	}
 	sqlite3_finalize(stmt);
+
+	std::string friendHashToken = getTokenFromID(toFriendId);
+	auto it = onlineClients.find(friendHashToken);
+	if (it != onlineClients.end()) {
+		int fd = it->second;
+		updateAllClientData(fd, friendHashToken);
+	}
 }
 
 json Database::getAllFriendsListFromTable(const int& clientId){

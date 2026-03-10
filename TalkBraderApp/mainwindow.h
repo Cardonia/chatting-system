@@ -63,6 +63,7 @@ private slots:
     void on_chatRoom_sendButton_clicked();
 
     void updateChatRoom();
+    void addOneChatMessage(const int &id , const QString text);
 
 private:
     Ui::TalkBrader *ui;

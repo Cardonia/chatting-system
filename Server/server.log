@@ -238,3 +238,83 @@
 2026-02-09 22:27:29 / Search For Friend , FD = 6
 2026-02-09 22:27:30 / Add friend request to 12 id , FD = 6
 2026-02-09 22:27:51 / lient Connected   FD = 
+2026-03-11 00:20:09 / Server Started
+2026-03-11 00:20:13 / New Client Connected   FD = 5
+2026-03-11 00:20:47 / New Client Connected   FD = 6
+2026-03-11 00:20:47 / Token , FD = 
+2026-03-11 00:20:47 / Check Token = Valid , FD = 6
+2026-03-11 00:21:18 / New Client Connected   FD = 6
+2026-03-11 00:22:17 / Register , FD = 6
+2026-03-11 00:22:17 / Register = Success, FD = 6
+2026-03-11 00:22:29 / Register , FD = 5
+2026-03-11 00:22:29 / Register = Success, FD = 5
+2026-03-11 00:31:59 / Server Started
+2026-03-11 00:32:05 / New Client Connected   FD = 5
+2026-03-11 00:32:38 / New Client Connected   FD = 6
+2026-03-11 00:33:27 / Register , FD = 6
+2026-03-11 00:33:27 / Register = Failed (User Already Exist) , FD = 6
+2026-03-11 00:33:30 / Register , FD = 6
+2026-03-11 00:33:30 / Register = Success, FD = 6
+2026-03-11 00:33:43 / Register , FD = 5
+2026-03-11 00:33:43 / Register = Success, FD = 5
+2026-03-11 00:33:50 / Search For Friend , FD = 6
+2026-03-11 00:49:50 / Server Started
+2026-03-11 00:49:53 / New Client Connected   FD = 5
+2026-03-11 00:49:53 /  Token , FD = 
+2026-03-11 00:49:53 / Check Token = Valid , FD = 5
+2026-03-11 00:50:11 / New Client Connected   FD = 6
+2026-03-11 00:50:30 / New Client Connected   FD = 7
+2026-03-11 00:50:30 / oken , FD = 
+2026-03-11 00:50:30 / Check Token = Valid , FD = 7
+2026-03-11 01:56:09 / New Client Connected   FD = 5
+2026-03-11 01:56:09 /  Token , FD = 
+2026-03-11 01:56:09 / Check Token = Valid , FD = 5
+2026-03-11 01:56:29 / New Client Connected   FD = 6
+2026-03-11 01:56:29 / Token , FD = 
+2026-03-11 01:56:29 / Check Token = Valid , FD = 6
+2026-03-11 02:03:55 / New Client Connected   FD = 7
+2026-03-11 02:03:55 / oken , FD = 
+2026-03-11 02:03:55 / Check Token = Valid , FD = 7
+2026-03-11 02:04:35 / New Client Connected   FD = 6
+2026-03-11 02:04:35 / Token , FD = 
+2026-03-11 02:04:35 / Check Token = Valid , FD = 6
+2026-03-11 02:18:31 / New Client Connected   FD = 5
+2026-03-11 02:18:31 /  Token , FD = 
+2026-03-11 02:18:31 / Check Token = Valid , FD = 5
+2026-03-11 02:18:50 / New Client Connected   FD = 6
+2026-03-11 02:18:51 / Token , FD = 
+2026-03-11 02:18:51 / Check Token = Valid , FD = 6
+2026-03-11 02:22:01 / New Client Connected   FD = 5
+2026-03-11 02:22:01 /  Token , FD = 
+2026-03-11 02:22:01 / Check Token = Valid , FD = 5
+2026-03-11 02:22:17 / New Client Connected   FD = 6
+2026-03-11 02:22:17 / Token , FD = 
+2026-03-11 02:22:17 / Check Token = Valid , FD = 6
+2026-03-11 02:22:32 / New Client Connected   FD = 7
+2026-03-11 02:22:50 / New Client Connected   FD = 8
+2026-03-11 02:23:35 / Register , FD = 7
+2026-03-11 02:23:35 / Register = Success, FD = 7
+2026-03-11 02:23:46 / Register , FD = 8
+2026-03-11 02:23:46 / Register = Success, FD = 8
+2026-03-11 02:23:53 / Search For Friend , FD = 7
+2026-03-11 02:23:55 / Add friend request to 19 id , FD = 7
+2026-03-11 02:24:05 / Search For Friend , FD = 7
+2026-03-11 02:24:06 / Add friend request to 20 id , FD = 7
+2026-03-11 02:24:19 / Search For Friend , FD = 8
+2026-03-11 02:24:20 / Add friend request to 21 id , FD = 8
+2026-03-11 02:24:23 / Search For Friend , FD = 8
+2026-03-11 02:24:24 / Add friend request to 19 id , FD = 8
+2026-03-11 02:24:29 / Search For Friend , FD = 8
+2026-03-11 02:24:30 / Add friend request to 20 id , FD = 8
+2026-03-11 02:26:47 / Search For Friend , FD = 6
+2026-03-11 02:26:48 / Add friend request to 22 id , FD = 6
+2026-03-11 02:26:53 / Add friend request to 22 id , FD = 6
+2026-03-11 02:26:57 / Add friend request to 22 id , FD = 6
+2026-03-11 02:26:58 / Add friend request to 22 id , FD = 6
+2026-03-11 02:26:58 / Add friend request to 22 id , FD = 6
+2026-03-11 02:26:58 / Add friend request to 22 id , FD = 6
+2026-03-11 02:26:58 / Add friend request to 22 id , FD = 6
+2026-03-11 02:26:59 / Add friend request to 22 id , FD = 6
+2026-03-11 02:26:59 / Add friend request to 22 id , FD = 6
+2026-03-11 02:27:29 / Search For Friend , FD = 6
+2026-03-11 02:27:31 / Add friend request to 22 id , FD = 6

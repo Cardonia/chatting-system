@@ -309,16 +309,17 @@ void handleUserSendMessage(int client,const std::string& msg){
     if(!areTheyFriend) return;
     std::cout<<"Debug: storing msg...."<<'\n';
     db.storeChatMessage(fromID,toID,text);
-    std::string friendToken = db.getTokenFromID(toID);
+    std::string friendHashToken = db.getTokenFromID(toID);
 
-    if (onlineClients.find(friendToken) != onlineClients.end()) {
-        int socket = onlineClients[friendToken];  
+    if (onlineClients.find(friendHashToken) != onlineClients.end()) {
+        int socket = onlineClients[friendHashToken];  
         
         json json;
         json["event"] = "YOU_GOT_MESSAGE";
         json["fromID"] = fromID;
         json["text"] = text;
         sendClientMsg(socket,json);
+        std::cout<<"Debug: live message \n socket: sender "<<client<<" | receiver "<<socket<<"\nID: sender "<<fromID<<" receiver "<<toID<<"\n";
     } 
     else std::cout << "User is not online"<<'\n';
 }

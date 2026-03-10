@@ -33,10 +33,10 @@ MainWindow::MainWindow() : QMainWindow(nullptr)
     checkToken();
 }
 
-
+QString FolderNameConfig = "TalkBradarDev4";
 //function to check Token
 void MainWindow::checkToken(){
-    QSettings settings("TalkBradarDev", "TalkBradar");
+    QSettings settings(FolderNameConfig, "TalkBradar");
     token = settings.value("token", "").toString();
     qDebug()<<"current user token is "<<token;
 
@@ -111,7 +111,7 @@ void MainWindow::runWhenDataReceived()
         else if (event=="REGISTER_SUCCESS"){
             qDebug()<<"got event: "<<event;
             token = obj["token"].toString();
-            QSettings settings("TalkBradarDev", "TalkBradar");
+            QSettings settings(FolderNameConfig, "TalkBradar");
             settings.setValue("token", token);
             ui->stackedWidget->setCurrentWidget(ui->chatPage);
         }
@@ -132,7 +132,7 @@ void MainWindow::runWhenDataReceived()
             qDebug()<<"LOGIN_SUCCESS";
             qDebug()<<"log in";
             token = obj["token"].toString();
-            QSettings settings("TalkBradarDev", "TalkBradar");
+            QSettings settings(FolderNameConfig, "TalkBradar");
             settings.setValue("token", token);
             ui->stackedWidget->setCurrentWidget(ui->chatPage);
         }
@@ -374,8 +374,29 @@ void MainWindow::runWhenDataReceived()
                 }
                 if(id == globalFriendId) updateChatRoom();
             }
+        }
 
 
+
+
+
+
+        else if(event == "YOU_GOT_MESSAGE"){
+            int id = obj["fromID"].toInt();
+             QString text = obj["text"].toString();
+            if(chatRoomsMap.contains(id)){
+                ChatRoom &roomObj = chatRoomsMap[id];
+                addOneChatMessage(id , text);
+
+
+                Message m;
+                m.fromMe = false;
+                m.text   = text;
+                roomObj.addMessage(m);
+
+                if(id == globalFriendId) addOneChatMessage(id, text);
+
+            }
 
         }
     }
@@ -579,5 +600,16 @@ void MainWindow::updateChatRoom(){
         }
 
     }
+}
+
+void MainWindow::addOneChatMessage(const int &id , const QString text){
+
+    Message m;
+    m.fromMe = false;
+    m.text = text;
+
+    QListWidgetItem* item = new QListWidgetItem(m.text);
+    item->setTextAlignment(m.fromMe ? Qt::AlignRight : Qt::AlignLeft);
+    ui->chatRoom_listWidget->addItem(item);
 }
 
