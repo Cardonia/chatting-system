@@ -5,55 +5,21 @@
 #include "json.hpp"
 using json = nlohmann::json;
 
-
-
-Database& Database::getInstance(const std::string& path) {
-	//Database& =reference to a Database object.
-	//Database::getInstance mean getInstance function is from Database class
-	static Database instance(path);
-	//static live forever, Database call for constructor, instance is a temprorary name.
-	return instance;
-}
-
-Database::Database(const std::string& path) : dbPath(path), db(nullptr) {
-	openDatabase();
-	initializeDatabase();
-}
-
-//this runs when the program ends or closed
-Database::~Database() {
-	closeDatabase();
-}
-
-
-
-//try to open database if not opened return false else return true
-bool Database::openDatabase() {
-	int dbCode = sqlite3_open(dbPath.c_str(), &db);	
-	//If dbCode == SQLITE_OK(value 0) -> success.
-	//If dbCode != SQLITE_OK -> some error happened.
-	if (dbCode != SQLITE_OK) {
-		std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
-		return false;
+//constructor 
+Database::Database(const std::string& path){
+	//get the database file name and set db pointer to null
+	dbPath = path;
+    db = nullptr;
+	//open the databse path and use db pointer to point to it
+	if(sqlite3_open(dbPath.c_str(), &db) != SQLITE_OK){
+		std::cout<<"Cant open database file\n";
+		std::exit(1);
 	}
-
-	return true;
+	//create the tables if not exist
+	createDatabaseTables();
 }
 
-
-void Database::closeDatabase() {
-	if (db) {
-		//db is a pointer. if its pointing to something then its true
-		sqlite3_close(db);
-
-		db = nullptr;
-		//After closing, the pointer still has the old memory address.Setting it to nullptr makes it clear : �no database is open now.�
-	}
-}
-
-
-
-void Database::initializeDatabase() {
+void Database::createDatabaseTables() {
 	const char* sql =
 		"CREATE TABLE IF NOT EXISTS users ("
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -61,10 +27,7 @@ void Database::initializeDatabase() {
 		"password TEXT NOT NULL, "
 		"token TEXT"
 		");";
-
-	//call execute function to run the sql command
-	execute(sql);
-
+	execute(sql);//call execute function to run the sql command
 
 	const char* sql2 =
 		"CREATE TABLE IF NOT EXISTS friendships("
@@ -77,7 +40,6 @@ void Database::initializeDatabase() {
 		"FOREIGN KEY(friend_id) REFERENCES users(id),"
 		"UNIQUE(user_id, friend_id)"
 		");";
-
 	execute(sql2);
 
 	const char* sql3 = 
@@ -88,32 +50,15 @@ void Database::initializeDatabase() {
     "text TEXT NOT NULL,"
     "datetime DATETIME DEFAULT CURRENT_TIMESTAMP"
 	");";
-
 	execute(sql3);
-
 }
 
-
-
-bool Database::execute(const std::string& sql) {
-	char* errMsg = nullptr; //errMsg is a pointer to an empty char
-	int dbCode = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errMsg);
-	if (dbCode != SQLITE_OK) {
-		std::cerr << "SQL error: " << errMsg << std::endl;
-		sqlite3_free(errMsg);
-		return false;
+void Database::execute(const std::string& sql) {
+	if(sqlite3_exec(db, sql.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK){
+		std::cerr << "SQL execute error: creating tables" << std::endl;
+		std::exit(1);
 	}
-	return true;
 }
-
-
-
-///////////////////////////////////////////////////////
-///////////////////////////////////////////////////////
-///////////////////////////////////////////////////////
-///////////////////////////////////////////////////////
-
-
 
 bool Database::validateToken(const std::string& token) {
 	std::string sql = "SELECT 1 FROM users WHERE token = ?;";
@@ -122,29 +67,11 @@ bool Database::validateToken(const std::string& token) {
 	bool valid = false;
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_text(stmt, 1, token.c_str(), -1, SQLITE_STATIC);
-
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			valid = true;
-		}
+		if (sqlite3_step(stmt) == SQLITE_ROW) valid = true;
 		sqlite3_finalize(stmt);
 	}
 	return valid;
-
 }
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////
-
-
-
-
-
-
 
 bool Database::userExists(const std::string& username) {
 	std::string sql = "SELECT 1 FROM users WHERE username = ?;";
@@ -154,24 +81,11 @@ bool Database::userExists(const std::string& username) {
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
 
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			exists = true;
-		}
+		if (sqlite3_step(stmt) == SQLITE_ROW) exists = true;
 		sqlite3_finalize(stmt);
 	}
 	return exists;
 }
-
-
-
-
-
-
-///////////////////////////////////////////////////////
-
-
-
-
 
 bool Database::validateLogin(const std::string& username, const std::string& passwordHash) {
 	std::string sql = "SELECT 1 FROM users WHERE username = ? AND password = ?;";
@@ -182,23 +96,11 @@ bool Database::validateLogin(const std::string& username, const std::string& pas
 		sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
 		sqlite3_bind_text(stmt, 2, passwordHash.c_str(), -1, SQLITE_STATIC);
 
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			valid = true;
-		}
+		if (sqlite3_step(stmt) == SQLITE_ROW) valid = true;
 		sqlite3_finalize(stmt);
 	}
 	return valid;
 }
-
-
-
-
-
-///////////////////////////////////////////////////////
-
-
-
-
 
 void Database::updateUserToken(const std::string& username, const std::string& token) {
 	std::string sql = "UPDATE users SET token = ? WHERE username = ?;";
@@ -212,17 +114,6 @@ void Database::updateUserToken(const std::string& username, const std::string& t
 	}
 }
 
-
-
-
-
-
-///////////////////////////////////////////////////////
-
-
-
-
-
 bool Database::registerUser(const std::string& username, const std::string& passwordHash, const std::string& token) {
 	std::string sql = "INSERT INTO users (username, password, token) VALUES (?, ?, ?);";
 	sqlite3_stmt* stmt;
@@ -233,20 +124,24 @@ bool Database::registerUser(const std::string& username, const std::string& pass
 		sqlite3_bind_text(stmt, 2, passwordHash.c_str(), -1, SQLITE_STATIC);
 		sqlite3_bind_text(stmt, 3, token.c_str(), -1, SQLITE_STATIC);
 
-		if (sqlite3_step(stmt) == SQLITE_DONE) {
-			success = true;
-		}
+		if (sqlite3_step(stmt) == SQLITE_DONE) success = true;
 		sqlite3_finalize(stmt);
 	}
 	return success;
 }
 
-
-
-///////////////////////////////////////////////////////
-
-
-
+int Database::whatUserIdIAM(const std::string& hashToken) {
+	sqlite3_stmt* stmt;
+	std::string sql = "SELECT id FROM users WHERE token = ?;";
+	int clientId = -1;
+	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+		sqlite3_bind_text(stmt, 1, hashToken.c_str(), -1, SQLITE_STATIC);
+		if (sqlite3_step(stmt) == SQLITE_ROW) clientId = sqlite3_column_int(stmt, 0);
+		sqlite3_finalize(stmt);
+	}
+	else std::cout << "Invalid token, id not found!" << std::endl;	
+	return  clientId;
+}
 
 json Database::searchUsers(const std::string& name,const std::string& hash) {
 	int senderTableID = whatUserIdIAM(hash);
@@ -262,11 +157,9 @@ json Database::searchUsers(const std::string& name,const std::string& hash) {
 
 		while (sqlite3_step(stmt) == SQLITE_ROW) {
 			int id = sqlite3_column_int(stmt, 0);
-			if(id==senderTableID)continue;
-			const char* username = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-			//char pointer , points to char in a text in memory 
-			//sqlite3_column_text(stmt, 1) return unsign char (positive 0-255) 
-			//reinterpret_cast<const char*> force to change type , tell cpp treat this as text 
+			if(id == senderTableID) continue;
+			//it will return unsigned char and we use  (const char*) to cornvert to char
+			const char* username = (const char*)sqlite3_column_text(stmt, 1);
 			if (username) {
 				names.push_back(username);
 				names_id.push_back(id);	
@@ -280,21 +173,28 @@ json Database::searchUsers(const std::string& name,const std::string& hash) {
 	return j;
 }
 
+std::string Database::getTokenFromID(const int& userID){
+	std::string sql = "SELECT token FROM users WHERE id = ?;";
+	sqlite3_stmt* stmt;
+    std::string token = "";
 
-
-
-///////////////////////////////////////////////////////
-
-
-
+	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, userID);
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			const unsigned char* temp = sqlite3_column_text(stmt, 0);
+            if(temp) token = (const char*)temp;
+		}
+	}
+	sqlite3_finalize(stmt);
+	return token;
+}
 
 void Database::addFriendRequestTable(int friendId, const std::string& hashtoken) {
-	
 	int senderId = whatUserIdIAM(hashtoken);
+	if(senderId == friendId) return;
 	if (senderId == -1) {std::cout << "Invalid token, sender not found!" << std::endl;return;}
-
 	sqlite3_stmt* stmt;
-
+	
 	std::string sqlCheckForExisting = 
 	"SELECT 1 FROM friendships WHERE "
 	"(user_id = ? AND friend_id = ?) "
@@ -310,50 +210,33 @@ void Database::addFriendRequestTable(int friendId, const std::string& hashtoken)
 
 		if (sqlite3_step(stmt) == SQLITE_ROW) {
 			std::cout << "request friendship exist from past" << std::endl;
+			sqlite3_finalize(stmt);
 			return;
 		}
-		else {
-			std::cout << "request friendship don't exist from past" << std::endl;
-			
-		}
+		else std::cout << "request friendship don't exist from past" << std::endl;
 		sqlite3_finalize(stmt);
 	}
-
 
 	std::string sqlInsert = "INSERT INTO friendships (user_id, friend_id, status) VALUES (?, ?, 'pending');";
 	if (sqlite3_prepare_v2(db, sqlInsert.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, senderId);
 		sqlite3_bind_int(stmt, 2, friendId);
 
-		
-		if (sqlite3_step(stmt) == SQLITE_DONE) {
-			std::cout << "Friend request sent from " << senderId << " to " << friendId << std::endl;
-		}
-		else {
-			std::cout << "Failed to send friend request!" << std::endl;
-		}
+		if (sqlite3_step(stmt) == SQLITE_DONE) std::cout << "Friend request sent from " << senderId << " to " << friendId << std::endl;
+		else std::cout << "Failed to send friend request!" << std::endl;
 		sqlite3_finalize(stmt);
 	}
+	std::string friendHashToken = getTokenFromID(friendId);
 	//send update for the reciver friend request if online
-	auto it = onlineClients.find(hashtoken);
+	auto it = onlineClients.find(friendHashToken);
 	//return iterator(like pointer thing!!) if the hash exist in map
 	//iterator points to the element if found, else it point to last fake element by default
 	if (it != onlineClients.end()) {
 		//checks if the hash was found, if it wanst last fake element then it found it
 		int fd = it->second;
-		updateAllClientData(fd, hashtoken);
+		updateAllClientData(fd, friendHashToken);
 	}
 }
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
 
 json Database::friendPendingRequest(const int& clientId) {
 	std::vector<std::string> names;
@@ -372,152 +255,92 @@ json Database::friendPendingRequest(const int& clientId) {
 		sqlite3_finalize(stmt);
 	}
 
-
-	
 	sql = "SELECT username FROM users WHERE id = ?;";
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 
 		for(int value : names_id){
 			sqlite3_bind_int(stmt, 1, value);
 			if (sqlite3_step(stmt) == SQLITE_ROW) {
-				const char* name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-				//char pointer , points to char in a text in memory 
-				//sqlite3_column_text(stmt, 1) return unsign char (positive 0-255) 
-				//reinterpret_cast<const char*> force to change type , tell cpp treat this as text 
+				const char* name = (const char*)sqlite3_column_text(stmt, 0);
 				if(name) names.push_back(name);
 			}
 			sqlite3_reset(stmt);
 		}
 		sqlite3_finalize(stmt);
 	}
-
 	json j;
 	j["names"] = names;
 	j["names_id"] = names_id;
 	return j;
 }
 
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
 void Database::acceptFriendRequest(const int& toFriendId, const std::string& hashToken) {
-	
-	
 	int senderId = whatUserIdIAM(hashToken);
 	if(senderId == -1){
 		std::cout<<"Debug: Faild userID for acceptFriendRequest: "<<senderId<<'\n';
 		return;
 	}
+	std::string sql = "UPDATE friendships SET status = 'accepted' WHERE user_id = ? AND friend_id = ? AND status = 'pending';";
 	sqlite3_stmt* stmt;
-
-	std::string sql = 
-	"UPDATE friendships SET status = 'accepted' WHERE "
-	"user_id = ? AND friend_id = ? AND status = 'pending';";
 
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, toFriendId);
 		sqlite3_bind_int(stmt, 2, senderId);
 
-		if (sqlite3_step(stmt) == SQLITE_DONE) {
-			std::cout << "Friend request accepted from " << senderId << " to " << toFriendId << std::endl;
-		}
-		else {
-			std::cout << "Failed to accept friend request!" << std::endl;
-		}
-		sqlite3_finalize(stmt);
+		if (sqlite3_step(stmt) == SQLITE_DONE) std::cout << "Friend request accepted from " << senderId << " to " << toFriendId << std::endl;
+		else std::cout << "Failed to accept friend request!" << std::endl;
 	}
 	else{
 		std::cout << "Failed to accept friend request! prepare_v2 failed" << std::endl;
+		sqlite3_finalize(stmt);
 		return;
 	}
+	sqlite3_finalize(stmt);
 }
-
-
-
-
-
-
-
-int Database::whatUserIdIAM(const std::string& hashToken) {
-	sqlite3_stmt* stmt;
-	std::string sql = "SELECT id FROM users WHERE token = ?;";
-	int clientId = -1;
-	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, hashToken.c_str(), -1, SQLITE_STATIC);
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			clientId = sqlite3_column_int(stmt, 0);
-		}
-		sqlite3_finalize(stmt);
-	}
-	else std::cout << "Invalid token, id not found!" << std::endl;
-		
-	return  clientId;
-}
-
-
-
-
-
-
 
 json Database::getAllFriendsListFromTable(const int& clientId){
 	std::vector<std::string> names;
 	std::vector<int> names_id;
-
-	std::string sql = "SELECT user_id FROM friendships WHERE friend_id = ? AND status = 'accepted';";
+ 
+	std::string sql = "SELECT user_id, friend_id FROM friendships WHERE (user_id = ? OR friend_id = ?) AND status = 'accepted';";
 	sqlite3_stmt* stmt;
 
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, clientId);
-
+		sqlite3_bind_int(stmt, 2, clientId);
 		while (sqlite3_step(stmt) == SQLITE_ROW) {
-			int id = sqlite3_column_int(stmt, 0);
-			names_id.push_back(id);
+			int id1 = sqlite3_column_int(stmt, 0);
+			int id2 = sqlite3_column_int(stmt, 1);
+
+			int friendId;
+			if (id1 == clientId) friendId = id2;
+			else friendId = id1;
+
+			names_id.push_back(friendId);
 		}
 		sqlite3_finalize(stmt);
 	}
-
-
 	
 	sql = "SELECT username FROM users WHERE id = ?;";
 	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-
 		for(int value : names_id){
 			sqlite3_bind_int(stmt, 1, value);
 			if (sqlite3_step(stmt) == SQLITE_ROW) {
-				const char* name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-				//char pointer , points to char in a text in memory 
-				//sqlite3_column_text(stmt, 1) return unsign char (positive 0-255) 
-				//reinterpret_cast<const char*> force to change type , tell cpp treat this as text 
+				const char* name = (const char*)sqlite3_column_text(stmt, 0);
 				if(name) names.push_back(name);
 			}
 			sqlite3_reset(stmt);
 		}
 		sqlite3_finalize(stmt);
 	}
-
 	json j;
 	j["names"] = names;
 	j["names_id"] = names_id;
 	return j;
 }
 
-
-
-///////////////////////////////////////////////////////////////////////////////////
-
 bool Database::checkIfTheyFriend(int& clientId , int& toFriendId){
-
 	sqlite3_stmt* stmt;
-
 	std::string sqlCheckForExisting = 
 	"SELECT 1 FROM friendships WHERE "
 	"((user_id = ? AND friend_id = ?) "
@@ -530,25 +353,12 @@ bool Database::checkIfTheyFriend(int& clientId , int& toFriendId){
 		sqlite3_bind_int(stmt, 3, toFriendId);
 		sqlite3_bind_int(stmt, 4, clientId);
 		
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			return true;
-		}
-		else {
-			return false;
-		}
-		sqlite3_finalize(stmt);
+		bool result = (sqlite3_step(stmt) == SQLITE_ROW);
+        sqlite3_finalize(stmt);
+        return result;
 	}
 	return false;
 } 
-
-
-
-/////////////////////////////////////////////////////////
-
-
-
-
-
 
 void Database::storeChatMessage(int fromID,int toID, std::string text){
 	std::string sql = "INSERT INTO messages (from_user_id , to_user_id , text) VALUES (?, ?, ?);";
@@ -559,47 +369,10 @@ void Database::storeChatMessage(int fromID,int toID, std::string text){
 		sqlite3_bind_int(stmt, 2, toID);
 		sqlite3_bind_text(stmt, 3, text.c_str(), -1, SQLITE_STATIC);
 
-		if (sqlite3_step(stmt) == SQLITE_DONE) {
-			std::cout<<"message saved"<<'\n';
-		}
+		if (sqlite3_step(stmt) == SQLITE_DONE) std::cout<<"message saved"<<'\n';
 		sqlite3_finalize(stmt);
 	}
 }
-
-
-
-
-/////////////////////////////////////////////////////////////
-
-
-
-
-std::string Database::getTokenFromID(const int& userID){
-
-	std::string sql = "SELECT token FROM users WHERE id = ?;";
-	sqlite3_stmt* stmt = nullptr;
-    std::string token = "";
-
-	if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, userID);
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			const unsigned char* temp = sqlite3_column_text(stmt, 0);
-            if(temp) token = reinterpret_cast<const char*>(temp);
-		}
-	}
-	if(stmt) sqlite3_finalize(stmt);
-	return token;
-}
-
-
-
-
-/////////////////////////////////////////////////////////////
-
-
-
-
-
 
 std::vector<Message> Database::getChatHistory(int myId, int friendId){
 	std::vector<Message> msgs;
@@ -624,22 +397,16 @@ std::vector<Message> Database::getChatHistory(int myId, int friendId){
 			int sender = sqlite3_column_int(stmt, 0);
             const unsigned char* txt = sqlite3_column_text(stmt, 2);
 
-			 Message m;
-			 if(sender == myId)
-				m.fromMe = true;
-			else
-				m.fromMe = false;
+			Message m;
+			if(sender == myId) m.fromMe = true;
+			else m.fromMe = false;
 
-			if(txt)
-				m.text = (const char*)txt;
-			else
-				m.text = "";
+			if(txt) m.text = (const char*)txt;
+			else m.text = "";
 
             msgs.push_back(m);
         }
     }
-
     sqlite3_finalize(stmt);
     return msgs;
-}	
-
+}
