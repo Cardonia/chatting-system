@@ -36,4 +36,5 @@ void handleChatRoom(int client, const std::string& msg);
 void handleUserSendMessage(int client,const std::string& msg);
 void handleChatHistory(int client, const std::string& msg);
 void CountAsOnline(int client , std::string tokenHash);
+void disconnectClient(const int client);
 #pragma once

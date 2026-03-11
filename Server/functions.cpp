@@ -114,14 +114,6 @@ void checkToken(int client , std::string msg) {
         updateAllClientData(client, tokenHash);
 
         log("Check Token = Valid , FD = "+std::to_string(client));
-
-        //###########################################
-        for (const auto& pair : onlineClients) {
-            const std::string& token = pair.first;
-            int socket = pair.second;
-            std::cout <<"online map : "<< "Token: " << token << ", Socket: " << socket << std::endl;
-        }   
-        //###########################################
     }
     else {
         std::cout << "No match for token" << std::endl;
@@ -332,16 +324,7 @@ void handleChatHistory(int client, const std::string& msg){
     int fromID = db.whatUserIdIAM(tokenHash);
 
     std::vector<Message> msgs= db.getChatHistory(fromID,toID);
-    /////////////////////////
-    if (msgs.empty()) {
-        std::cout << "No messages.\n";
-    }
-    else {
-        for (const Message& msg : msgs) {
-            std::cout << (msg.fromMe ? "Me: " : "Other: ") << msg.text << std::endl;
-        }
-    }//////////////////////
-
+  
     json j2 ;
     j2["event"] = "GOT_HISTORY_MESSAGES";
     j2["for_friend_id"] = toID; 
@@ -372,5 +355,14 @@ void log(const std::string& msg) {
         for (auto& m : logBuffer)
             file << m << '\n';
         logBuffer.clear();
+    }
+}
+
+void disconnectClient(const int client){
+    close(client);
+    if(onlineClientsRE.find(client) != onlineClientsRE.end()){
+        std::string tokenForSecondMap = onlineClientsRE[client];
+        onlineClientsRE.erase(client);
+        onlineClients.erase(tokenForSecondMap);
     }
 }

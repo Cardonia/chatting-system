@@ -79,7 +79,7 @@ int main() {
 
             if (midMessage && currentTime - state.lastActivity > 5) {
                 //run if client was idle for more than 5s
-                close(thisSocket->first);
+                disconnectClient(thisSocket->first);
                 FD_CLR(thisSocket->first, &socket_list);
                 thisSocket = clients.erase(thisSocket);
                 std::cout << "client timed out\n";
@@ -144,7 +144,7 @@ void readClientMsg(int fd, fd_set& socket_list) {
 
         //close and delete the socket if there is no data
         if(recev <= 0){
-            close(fd); 
+            disconnectClient(fd); 
             FD_CLR(fd,&socket_list);
             clients.erase(fd); 
             return;
@@ -170,7 +170,7 @@ void readClientMsg(int fd, fd_set& socket_list) {
     }
     //clsoe client socket is sent big msg
     if (state.size > 10000) { //10,000 byte max
-        close(fd);
+        disconnectClient(fd);
         FD_CLR(fd, &socket_list);
         clients.erase(fd);
         std::cout << "client sent too big message\n";
@@ -184,7 +184,7 @@ void readClientMsg(int fd, fd_set& socket_list) {
     state.lastActivity = time(nullptr);
     //update socket timeout to current time
 
-    if (recev <= 0) { close(fd); FD_CLR(fd, &socket_list); clients.erase(fd); return; }
+    if (recev <= 0) { disconnectClient(fd); FD_CLR(fd, &socket_list); clients.erase(fd); return; }
     
     state.received += recev;
 
