@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:talk_brader/app_data.dart';
 import 'package:talk_brader/handle_server_messages.dart';
 
 class SocketManager{
@@ -16,14 +17,16 @@ class SocketManager{
             startListeningFromServer();
             print("Connection Success");
             isConnected = true;
+            AppData.connected = true;
             return true;
         } catch (e) {
             print("Connection Failed");
+            AppData.connected = false;
             return false;
         }
     }
 
-    void sendData(var data){
+    void sendData(Map<String, String> data){
         String jsonString = jsonEncode(data);
         List<int> bytesList = utf8.encode(jsonString);
 
@@ -37,10 +40,11 @@ class SocketManager{
         ];
 
         fullMessageByte.addAll(bytesList);
-        print(fullMessageByte);
-
+        print(socket);
         socket?.add(fullMessageByte);
+        socket?.flush(); 
 
+        print(fullMessageByte);
     }
 
     void startListeningFromServer() {
@@ -51,13 +55,7 @@ class SocketManager{
       });
     }
 
-    void disconnect(){
-        socket?.destroy();
-        isConnected = false;
-        print("Disconnected");
-        handleRecieveBuffer();
-    }    
-
+  
     void handleRecieveBuffer(){
 
         if(recieveBuffer.length<4) return;
@@ -77,5 +75,10 @@ class SocketManager{
     }
 
 
+  void disconnect(){
+        socket?.destroy();
+        isConnected = false;
+        print("Disconnected");
+    }    
 
 }

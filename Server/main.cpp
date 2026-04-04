@@ -143,7 +143,9 @@ void readClientMsg(int fd, fd_set& socket_list) {
         //update socket timeout to current time
 
         //close and delete the socket if there is no data
+        std::cout<<"number of bytes recived: "<<recev<<std::endl;
         if(recev <= 0){
+            std::cout<<"client got disconnected because didnt send anydata while it were active\n";
             disconnectClient(fd); 
             FD_CLR(fd,&socket_list);
             clients.erase(fd); 
@@ -193,6 +195,7 @@ void readClientMsg(int fd, fd_set& socket_list) {
         //convert buffer vector<char> to string
 
         //handle the msg
+        std::cout<<"final msg: "<<msg<<std::endl;
         handleClientEvent(fd, msg);
 
         // reset for next message

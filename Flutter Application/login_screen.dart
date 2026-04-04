@@ -1,0 +1,92 @@
+import 'package:flutter/material.dart';
+import 'package:talk_brader/socket_manager.dart';
+import 'global.dart';
+
+
+class LoginScreen extends StatefulWidget {
+
+  static final GlobalKey<_LoginScreenState> registerKey = GlobalKey<_LoginScreenState>();
+
+  LoginScreen({Key? key}) : super(key: registerKey);
+
+ @override
+  _LoginScreenState createState() => _LoginScreenState();
+
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  String errorText = ""; // store error message
+    void setErrorText(String text) {
+    setState(() {
+      errorText = text;
+    });
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Login")),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 250,
+              child: TextField(
+                controller: usernameController,
+                decoration: InputDecoration(labelText: "Username"),
+              ),
+            ),
+            SizedBox(height: 10),
+            SizedBox(
+              width: 250,
+              child: TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(labelText: "Password"),
+              ),
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              width: 150,
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    if (passwordController.text.length < 8) {
+                      errorText = "Password must be at least 8 characters";
+                    } else {
+                      errorText = "";
+
+                      // create data map
+                      Map<String, String> data = {
+                        "event": "LOGIN",
+                        "username": usernameController.text,
+                        "password": passwordController.text,
+                      };
+                      // send to network
+                      networkManager.sendData(data);
+                    
+                    }
+                  });
+                },
+                child: Text("Register"),
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              errorText,
+              style: TextStyle(color: Colors.red),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}

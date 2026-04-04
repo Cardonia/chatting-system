@@ -21,7 +21,7 @@ int globalFriendId=0;
 
 //constructor
 MainWindow::MainWindow() : QMainWindow(nullptr)
-    // Creates a MainWindow object with no parent window
+    // Creates a MainWindow object with no parent window (btw i wrote this comments)
     // Calls QMainWindow constructor with nullptr for ownership/memory management
     , ui(new Ui::TalkBrader)
 // Creates the UI object from the .ui file and stores its pointer in 'ui'
@@ -33,7 +33,7 @@ MainWindow::MainWindow() : QMainWindow(nullptr)
     checkToken();
 }
 
-QString FolderNameConfig = "TalkBradarDev4";
+QString FolderNameConfig = "TalkBradarDev1";
 //function to check Token
 void MainWindow::checkToken(){
     QSettings settings(FolderNameConfig, "TalkBradar");
@@ -87,7 +87,7 @@ void MainWindow::runWhenDataReceived()
         //Checks if we have the full JSON message yet.
         //buffer.size() - 4 → remaining bytes after the length.
         //If not enough, exit and wait for more data.
-
+        //u reading my codes? thanks!
         QByteArray jsonData = buffer.mid(4, length);
         //buffer.mid(4, length) → take length bytes starting from byte 4 (skip the 4-byte length).
         //So jsonData now contains only the JSON, without the length prefix
@@ -102,9 +102,7 @@ void MainWindow::runWhenDataReceived()
         QString event = obj["event"].toString();
 
 
-        if (event == "test")
-            qDebug()<<"working  "<<event;
-        else if(event == "REGISTER_USER_EXIST"){
+        if(event == "REGISTER_USER_EXIST"){
             qDebug()<<"got event: "<<event;
             ui->label_10->setText("Username Is Already Exist!");
         }
@@ -386,7 +384,6 @@ void MainWindow::runWhenDataReceived()
              QString text = obj["text"].toString();
             if(chatRoomsMap.contains(id)){
                 ChatRoom &roomObj = chatRoomsMap[id];
-                addOneChatMessage(id , text);
 
                 Message m;
                 m.fromMe = false;

@@ -1,21 +1,35 @@
 import 'package:flutter/material.dart';
-
+import 'app_data.dart';
+import 'register&login_screen.dart';
 class StartupScreen extends StatefulWidget { 
-  final bool connected;
-  StartupScreen({required this.connected});
-  //screen widget 
+  
   @override
   _StartupScreenState createState() => _StartupScreenState();
+
 }
 
 class _StartupScreenState extends State<StartupScreen> {//screen state
-  late String status;
-
+  
   @override
   void initState() {
     super.initState();
-    status = widget.connected ? "Connection Success" : "Connection Failed";
+    // wait 2 seconds and check connection
+    if (AppData.connected == true) {
+      Future.delayed(Duration(seconds: 0), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => RegisterLoginScreen()),
+        );
+      });
+    }
   }
+
+
+  String getStatusText() {
+  if (AppData.connected == null) return "Checking...";
+  if (AppData.connected == true) return "Connection Success";
+  return "Connection Failed";
+}
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +40,7 @@ class _StartupScreenState extends State<StartupScreen> {//screen state
           children: [
             FlutterLogo(size: 100), 
             SizedBox(height: 20),
-            Text(status), 
+            Text(getStatusText()), 
           ],
         ),
       ),

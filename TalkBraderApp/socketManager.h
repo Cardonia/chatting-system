@@ -1,6 +1,4 @@
-#ifndef SOCKETMANAGER_H
-#define SOCKETMANAGER_H
-
+#pragma once
 #include <QTcpSocket>
 
 class socketManager{
@@ -10,4 +8,3 @@ public:
     //* pointer to the socket obj
 };
 
-#endif // SOCKETMANAGER_H
