@@ -5,9 +5,9 @@ import 'global.dart';
 
 class LoginScreen extends StatefulWidget {
 
-  static final GlobalKey<_LoginScreenState> registerKey = GlobalKey<_LoginScreenState>();
+  static final GlobalKey<_LoginScreenState> loginKey = GlobalKey<_LoginScreenState>();
 
-  LoginScreen({Key? key}) : super(key: registerKey);
+  LoginScreen({Key? key}) : super(key: loginKey);
 
  @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   });
                 },
-                child: Text("Register"),
+                child: Text("Login"),
               ),
             ),
             SizedBox(height: 10),

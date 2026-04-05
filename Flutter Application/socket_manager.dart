@@ -13,7 +13,7 @@ class SocketManager{
 
     Future<bool> connectToServer() async { //async means fucntion can wait without freezing program
         try {
-            socket = await Socket.connect("127.0.0.1", 5000).timeout(Duration(seconds: 3));
+            socket = await Socket.connect("10.59.90.76", 5000).timeout(Duration(seconds: 3));
             startListeningFromServer();
             print("Connection Success");
             isConnected = true;
@@ -40,11 +40,9 @@ class SocketManager{
         ];
 
         fullMessageByte.addAll(bytesList);
-        print(socket);
+
         socket?.add(fullMessageByte);
         socket?.flush(); 
-
-        print(fullMessageByte);
     }
 
     void startListeningFromServer() {
@@ -57,23 +55,24 @@ class SocketManager{
 
   
     void handleRecieveBuffer(){
+    while (true) {
 
-        if(recieveBuffer.length<4) return;
+      if (recieveBuffer.length < 4) return;
 
-        int size = recieveBuffer[0]*256*256*256
-         + recieveBuffer[1]*256*256
-         + recieveBuffer[2]*256
-         + recieveBuffer[3];
+      int size = recieveBuffer[0]*256*256*256
+        + recieveBuffer[1]*256*256
+        + recieveBuffer[2]*256
+        + recieveBuffer[3];
 
-        if (recieveBuffer.length < 4 + size) return;
+      if (recieveBuffer.length < 4 + size) return;
 
-        List<int> messageBytes = recieveBuffer.sublist(4, 4 + size);
+      List<int> messageBytes = recieveBuffer.sublist(4, 4 + size);
 
-        recieveBuffer = recieveBuffer.sublist(4 + size);
+      recieveBuffer = recieveBuffer.sublist(4 + size);
 
-        handleMessage.proccess(messageBytes);
+      handleMessage.proccess(messageBytes);
     }
-
+  }
 
   void disconnect(){
         socket?.destroy();

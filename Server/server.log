@@ -458,3 +458,533 @@
 2026-04-04 22:21:07 / Register = Failed (User Already Exist) , FD = 5
 2026-04-04 22:21:08 / Register , FD = 5
 2026-04-04 22:21:08 / Register = Failed (User Already Exist) , FD = 5
+2026-04-05 09:24:22 / Server Started
+2026-04-05 09:24:31 / New Client Connected   FD = 5
+2026-04-05 09:38:05 / New Client Connected   FD = 5
+2026-04-05 09:38:22 / Register , FD = 5
+2026-04-05 09:38:22 / Register = Failed (User Already Exist) , FD = 5
+2026-04-05 09:38:53 / Register , FD = 5
+2026-04-05 09:38:53 / Register = Success, FD = 5
+2026-04-05 09:39:04 / Register , FD = 5
+2026-04-05 09:39:04 / Register = Failed (User Already Exist) , FD = 5
+2026-04-05 09:59:59 / New Client Connected   FD = 5
+2026-04-05 10:00:12 / Login , FD = 5
+2026-04-05 10:00:12 / Login = Failed , FD = 5
+2026-04-05 10:00:16 / Login , FD = 5
+2026-04-05 10:00:16 / Login = Success, FD = 5
+2026-04-05 10:05:38 / New Client Connected   FD = 5
+2026-04-05 10:09:13 / New Client Connected   FD = 5
+2026-04-05 10:10:30 / New Client Connected   FD = 5
+2026-04-05 10:16:30 / New Client Connected   FD = 5
+2026-04-05 10:16:41 / Register , FD = 5
+2026-04-05 10:16:41 / Register = Success, FD = 5
+2026-04-05 10:16:59 / New Client Connected   FD = 5
+2026-04-05 10:17:16 / Login , FD = 5
+2026-04-05 10:17:16 / Login = Success, FD = 5
+2026-04-05 10:17:20 / New Client Connected   FD = 5
+2026-04-05 10:17:24 / New Client Connected   FD = 5
+2026-04-05 10:17:24 / New Client Connected   FD = 5
+2026-04-05 10:17:25 / New Client Connected   FD = 5
+2026-04-05 10:17:26 / New Client Connected   FD = 5
+2026-04-05 10:17:26 / New Client Connected   FD = 5
+2026-04-05 11:35:49 / New Client Connected   FD = 5
+2026-04-05 11:35:49 /  Token , FD = 
+2026-04-05 11:35:49 / Check Token = Valid , FD = 5
+2026-04-05 11:36:06 / New Client Connected   FD = 5
+2026-04-05 11:36:06 /  Token , FD = 
+2026-04-05 11:36:06 / Check Token = Valid , FD = 5
+2026-04-05 11:37:10 / New Client Connected   FD = 5
+2026-04-05 11:37:10 /  Token , FD = 
+2026-04-05 11:37:10 / Check Token = Invalid , FD = 5
+2026-04-05 11:41:52 / New Client Connected   FD = 5
+2026-04-05 11:41:52 /  Token , FD = 
+2026-04-05 11:41:52 / Check Token = Invalid , FD = 5
+2026-04-05 11:42:46 / New Client Connected   FD = 5
+2026-04-05 11:42:47 /  Token , FD = 
+2026-04-05 11:42:47 / Check Token = Invalid , FD = 5
+2026-04-05 11:43:04 / Register , FD = 5
+2026-04-05 11:43:04 / Register = Success, FD = 5
+2026-04-05 11:43:14 / Register , FD = 5
+2026-04-05 11:43:14 / Register = Failed (User Already Exist) , FD = 5
+2026-04-05 11:43:18 / New Client Connected   FD = 5
+2026-04-05 11:43:19 /  Token , FD = 
+2026-04-05 11:43:19 / Check Token = Valid , FD = 5
+2026-04-05 11:44:33 / New Client Connected   FD = 5
+2026-04-05 11:44:34 /  Token , FD = 
+2026-04-05 11:44:34 / Check Token = Valid , FD = 5
+2026-04-05 12:08:09 / New Client Connected   FD = 5
+2026-04-05 12:08:09 /  Token , FD = 
+2026-04-05 12:08:09 / Check Token = Valid , FD = 5
+2026-04-05 12:10:30 / New Client Connected   FD = 5
+2026-04-05 12:10:30 /  Token , FD = 
+2026-04-05 12:10:30 / Check Token = Valid , FD = 5
+2026-04-05 12:10:51 / New Client Connected   FD = 5
+2026-04-05 12:10:52 /  Token , FD = 
+2026-04-05 12:10:52 / Check Token = Invalid , FD = 5
+2026-04-05 12:11:01 / New Client Connected   FD = 5
+2026-04-05 12:11:01 /  Token , FD = 
+2026-04-05 12:11:01 / Check Token = Invalid , FD = 5
+2026-04-05 12:12:31 / New Client Connected   FD = 5
+2026-04-05 12:12:32 /  Token , FD = 
+2026-04-05 12:12:32 / Check Token = Invalid , FD = 5
+2026-04-05 12:12:44 / Register , FD = 5
+2026-04-05 12:12:44 / Register = Success, FD = 5
+2026-04-05 12:12:54 / New Client Connected   FD = 5
+2026-04-05 12:12:54 /  Token , FD = 
+2026-04-05 12:12:54 / Check Token = Valid , FD = 5
+2026-04-05 12:48:36 / New Client Connected   FD = 5
+2026-04-05 12:48:36 /  Token , FD = 
+2026-04-05 12:48:36 / Check Token = Valid , FD = 5
+2026-04-05 12:52:14 / New Client Connected   FD = 5
+2026-04-05 12:52:15 /  Token , FD = 
+2026-04-05 12:52:15 / Check Token = Valid , FD = 5
+2026-04-05 12:52:22 / Search For Friend , FD = 5
+2026-04-05 12:52:48 / Search For Friend , FD = 5
+2026-04-05 12:52:49 / Search For Friend , FD = 5
+2026-04-05 13:02:34 / New Client Connected   FD = 5
+2026-04-05 13:02:37 /  Token , FD = 
+2026-04-05 13:02:37 / Check Token = Valid , FD = 5
+2026-04-05 13:02:40 / Search For Friend , FD = 5
+2026-04-05 13:02:53 / Search For Friend , FD = 5
+2026-04-05 13:02:59 / Search For Friend , FD = 5
+2026-04-05 13:03:49 / Search For Friend , FD = 5
+2026-04-05 13:26:54 / Server Started
+2026-04-05 13:27:08 / New Client Connected   FD = 5
+2026-04-05 13:27:09 /  Token , FD = 
+2026-04-05 13:27:09 / Check Token = Valid , FD = 5
+2026-04-05 13:27:16 / Search For Friend , FD = 5
+2026-04-05 13:27:18 / Add friend request to 3 id , FD = 5
+2026-04-05 13:27:20 / Add friend request to 3 id , FD = 5
+2026-04-05 13:27:22 / Add friend request to 4 id , FD = 5
+2026-04-05 13:27:22 / Add friend request to 4 id , FD = 5
+2026-04-05 13:27:26 / Add friend request to 3 id , FD = 5
+2026-04-05 13:27:26 / Add friend request to 3 id , FD = 5
+2026-04-05 13:27:26 / Add friend request to 3 id , FD = 5
+2026-04-05 13:27:26 / Add friend request to 4 id , FD = 5
+2026-04-05 13:27:27 / Add friend request to 4 id , FD = 5
+2026-04-05 13:27:27 / Add friend request to 3 id , FD = 5
+2026-04-05 13:27:27 / Add friend request to 4 id , FD = 5
+2026-04-05 13:27:27 / Add friend request to 4 id , FD = 5
+2026-04-05 13:27:27 / Add friend request to 3 id , FD = 5
+2026-04-05 13:27:27 / Add friend request to 4 id , FD = 5
+2026-04-05 13:27:28 / Add friend request to 4 id , FD = 5
+2026-04-05 14:03:57 / Server Started
+2026-04-05 14:04:02 / New Client Connected   FD = 5
+2026-04-05 14:04:02 /  Token , FD = 
+2026-04-05 14:04:02 / Check Token = Valid , FD = 5
+2026-04-05 14:04:04 / Search For Friend , FD = 5
+2026-04-05 14:04:11 / Search For Friend , FD = 5
+2026-04-05 14:04:11 / Search For Friend , FD = 5
+2026-04-05 14:04:12 / Search For Friend , FD = 5
+2026-04-05 14:04:15 / Search For Friend , FD = 5
+2026-04-05 14:11:01 / New Client Connected   FD = 5
+2026-04-05 14:11:02 /  Token , FD = 
+2026-04-05 14:11:02 / Check Token = Valid , FD = 5
+2026-04-05 14:11:08 / Search For Friend , FD = 5
+2026-04-05 14:11:09 / Add friend request to 1 id , FD = 5
+2026-04-05 14:15:24 / New Client Connected   FD = 5
+2026-04-05 14:15:25 /  Token , FD = 
+2026-04-05 14:15:25 / Check Token = Valid , FD = 5
+2026-04-05 14:15:29 / Search For Friend , FD = 5
+2026-04-05 14:15:30 / Add friend request to 1 id , FD = 5
+2026-04-05 14:15:34 / Search For Friend , FD = 5
+2026-04-05 14:15:36 / Add friend request to 1 id , FD = 5
+2026-04-05 14:15:54 / New Client Connected   FD = 5
+2026-04-05 14:15:54 /  Token , FD = 
+2026-04-05 14:15:54 / Check Token = Valid , FD = 5
+2026-04-05 14:15:57 / Search For Friend , FD = 5
+2026-04-05 14:15:57 / Add friend request to 1 id , FD = 5
+2026-04-05 14:16:01 / Add friend request to 1 id , FD = 5
+2026-04-05 14:16:05 / Add friend request to 1 id , FD = 5
+2026-04-05 14:19:14 / New Client Connected   FD = 5
+2026-04-05 14:19:15 /  Token , FD = 
+2026-04-05 14:19:15 / Check Token = Valid , FD = 5
+2026-04-05 14:19:19 / Search For Friend , FD = 5
+2026-04-05 14:19:21 / Search For Friend , FD = 5
+2026-04-05 14:19:22 / Add friend request to 1 id , FD = 5
+2026-04-05 14:19:27 / Add friend request to 1 id , FD = 5
+2026-04-05 14:19:31 / Search For Friend , FD = 5
+2026-04-05 14:19:32 / Add friend request to 1 id , FD = 5
+2026-04-05 14:20:43 / New Client Connected   FD = 5
+2026-04-05 14:20:44 /  Token , FD = 
+2026-04-05 14:20:44 / Check Token = Valid , FD = 5
+2026-04-05 14:20:47 / Search For Friend , FD = 5
+2026-04-05 14:20:48 / Add friend request to 1 id , FD = 5
+2026-04-05 14:20:52 / Add friend request to 1 id , FD = 5
+2026-04-05 14:20:57 / Search For Friend , FD = 5
+2026-04-05 14:20:59 / Add friend request to 1 id , FD = 5
+2026-04-05 14:21:00 / Add friend request to 1 id , FD = 5
+2026-04-05 14:21:00 / Add friend request to 1 id , FD = 5
+2026-04-05 14:21:01 / Add friend request to 1 id , FD = 5
+2026-04-05 14:21:01 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:01 / New Client Connected   FD = 5
+2026-04-05 14:22:01 /  Token , FD = 
+2026-04-05 14:22:01 / Check Token = Valid , FD = 5
+2026-04-05 14:22:07 / Search For Friend , FD = 5
+2026-04-05 14:22:08 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:12 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:12 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:12 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:12 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:14 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:14 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:14 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:14 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:15 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:15 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:16 / Add friend request to 1 id , FD = 5
+2026-04-05 14:22:20 / Search For Friend , FD = 5
+2026-04-05 14:22:28 / Add friend request to 4 id , FD = 5
+2026-04-05 14:22:29 / Add friend request to 3 id , FD = 5
+2026-04-05 14:22:30 / Add friend request to 4 id , FD = 5
+2026-04-05 14:22:31 / Add friend request to 3 id , FD = 5
+2026-04-05 14:22:56 / New Client Connected   FD = 5
+2026-04-05 14:22:57 /  Token , FD = 
+2026-04-05 14:22:57 / Check Token = Valid , FD = 5
+2026-04-05 14:23:02 / Search For Friend , FD = 5
+2026-04-05 14:23:03 / Add friend request to 3 id , FD = 5
+2026-04-05 14:23:07 / Add friend request to 4 id , FD = 5
+2026-04-05 14:26:31 / New Client Connected   FD = 5
+2026-04-05 14:26:31 /  Token , FD = 
+2026-04-05 14:26:31 / Check Token = Valid , FD = 5
+2026-04-05 14:26:57 / Search For Friend , FD = 5
+2026-04-05 14:27:01 / Search For Friend , FD = 5
+2026-04-05 14:27:02 / Add friend request to 3 id , FD = 5
+2026-04-05 14:27:02 / Add friend request to 4 id , FD = 5
+2026-04-05 14:28:42 / New Client Connected   FD = 5
+2026-04-05 14:28:43 /  Token , FD = 
+2026-04-05 14:28:43 / Check Token = Valid , FD = 5
+2026-04-05 14:52:27 / New Client Connected   FD = 5
+2026-04-05 14:52:28 /  Token , FD = 
+2026-04-05 14:52:28 / Check Token = Valid , FD = 5
+2026-04-05 14:52:39 / New Client Connected   FD = 5
+2026-04-05 14:52:40 /  Token , FD = 
+2026-04-05 14:52:40 / Check Token = Valid , FD = 5
+2026-04-05 14:53:21 / New Client Connected   FD = 5
+2026-04-05 14:53:22 /  Token , FD = 
+2026-04-05 14:53:22 / Check Token = Valid , FD = 5
+2026-04-05 15:01:21 / New Client Connected   FD = 5
+2026-04-05 15:01:23 /  Token , FD = 
+2026-04-05 15:01:23 / Check Token = Valid , FD = 5
+2026-04-05 15:03:55 / New Client Connected   FD = 5
+2026-04-05 15:03:56 /  Token , FD = 
+2026-04-05 15:03:56 / Check Token = Valid , FD = 5
+2026-04-05 15:08:18 / New Client Connected   FD = 5
+2026-04-05 15:08:20 /  Token , FD = 
+2026-04-05 15:08:20 / Check Token = Valid , FD = 5
+2026-04-05 15:11:09 / New Client Connected   FD = 6
+2026-04-05 15:11:09 / Token , FD = 
+2026-04-05 15:11:09 / Check Token = Valid , FD = 6
+2026-04-05 15:11:17 / Search For Friend , FD = 6
+2026-04-05 15:11:20 / Add friend request to 7 id , FD = 6
+2026-04-05 15:11:35 / Add friend request to 7 id , FD = 6
+2026-04-05 15:13:05 / New Client Connected   FD = 6
+2026-04-05 15:13:21 / Register , FD = 6
+2026-04-05 15:13:21 / Register = Success, FD = 6
+2026-04-05 15:13:28 / Search For Friend , FD = 5
+2026-04-05 15:13:38 / Search For Friend , FD = 6
+2026-04-05 15:13:39 / Add friend request to 7 id , FD = 6
+2026-04-05 15:21:26 / New Client Connected   FD = 5
+2026-04-05 15:21:28 /  Token , FD = 
+2026-04-05 15:21:28 / Check Token = Valid , FD = 5
+2026-04-05 15:21:49 / New Client Connected   FD = 6
+2026-04-05 15:21:49 / Token , FD = 
+2026-04-05 15:21:49 / Check Token = Valid , FD = 6
+2026-04-05 15:21:57 / Search For Friend , FD = 6
+2026-04-05 15:21:59 / Add friend request to 7 id , FD = 6
+2026-04-05 15:22:07 / Add friend request to 7 id , FD = 6
+2026-04-05 16:09:35 / New Client Connected   FD = 5
+2026-04-05 16:09:37 /  Token , FD = 
+2026-04-05 16:09:37 / Check Token = Valid , FD = 5
+2026-04-05 16:10:31 / New Client Connected   FD = 5
+2026-04-05 16:10:33 /  Token , FD = 
+2026-04-05 16:10:33 / Check Token = Valid , FD = 5
+2026-04-05 16:10:43 / New Client Connected   FD = 5
+2026-04-05 16:10:44 /  Token , FD = 
+2026-04-05 16:10:44 / Check Token = Valid , FD = 5
+2026-04-05 16:11:57 / New Client Connected   FD = 6
+2026-04-05 16:12:14 / Register , FD = 6
+2026-04-05 16:12:14 / Register = Success, FD = 6
+2026-04-05 16:12:55 / Search For Friend , FD = 6
+2026-04-05 16:12:57 / Add friend request to 7 id , FD = 6
+2026-04-05 16:12:58 / Add friend request to 3 id , FD = 6
+2026-04-05 16:12:59 / Add friend request to 4 id , FD = 6
+2026-04-05 16:13:04 / Add friend request to 7 id , FD = 6
+2026-04-05 16:13:23 / Add friend request to 7 id , FD = 6
+2026-04-05 16:13:25 / Add friend request to 3 id , FD = 6
+2026-04-05 16:13:26 / Add friend request to 4 id , FD = 6
+2026-04-05 16:13:49 / New Client Connected   FD = 6
+2026-04-05 16:13:59 / Register , FD = 6
+2026-04-05 16:13:59 / Register = Success, FD = 6
+2026-04-05 16:14:06 / Search For Friend , FD = 6
+2026-04-05 16:15:01 / New Client Connected   FD = 6
+2026-04-05 16:26:43 / Server Started
+2026-04-05 16:26:49 / New Client Connected   FD = 5
+2026-04-05 16:26:49 /  Token , FD = 
+2026-04-05 16:26:49 / Check Token = Invalid , FD = 5
+2026-04-05 16:27:28 / Register , FD = 5
+2026-04-05 16:27:28 / Register = Success, FD = 5
+2026-04-05 16:28:14 / New Client Connected   FD = 6
+2026-04-05 16:28:15 / Token , FD = 
+2026-04-05 16:28:15 / Check Token = Valid , FD = 6
+2026-04-05 16:28:50 / Search For Friend , FD = 5
+2026-04-05 16:36:47 / Server Started
+2026-04-05 16:37:05 / New Client Connected   FD = 5
+2026-04-05 16:37:07 /  Token , FD = 
+2026-04-05 16:37:07 / Check Token = Valid , FD = 5
+2026-04-05 16:38:05 / New Client Connected   FD = 6
+2026-04-05 16:38:05 / Token , FD = 
+2026-04-05 16:38:05 / Check Token = Valid , FD = 6
+2026-04-05 16:38:13 / Search For Friend , FD = 6
+2026-04-05 16:38:14 / Add friend request to 7 id , FD = 6
+2026-04-05 16:41:00 / New Client Connected   FD = 5
+2026-04-05 16:41:01 /  Token , FD = 
+2026-04-05 16:41:01 / Check Token = Valid , FD = 5
+2026-04-05 16:41:26 / New Client Connected   FD = 5
+2026-04-05 16:41:26 /  Token , FD = 
+2026-04-05 16:41:26 / Check Token = Valid , FD = 5
+2026-04-05 16:41:44 / New Client Connected   FD = 6
+2026-04-05 16:41:45 / Token , FD = 
+2026-04-05 16:41:45 / Check Token = Valid , FD = 6
+2026-04-05 16:41:54 / Search For Friend , FD = 5
+2026-04-05 16:41:55 / Add friend request to 7 id , FD = 5
+2026-04-05 16:42:15 / New Client Connected   FD = 5
+2026-04-05 16:42:16 /  Token , FD = 
+2026-04-05 16:42:16 / Check Token = Valid , FD = 5
+2026-04-05 16:42:32 / Search For Friend , FD = 5
+2026-04-05 16:42:34 / Search For Friend , FD = 5
+2026-04-05 16:42:38 / Search For Friend , FD = 5
+2026-04-05 16:42:54 / Search For Friend , FD = 5
+2026-04-05 16:43:01 / Search For Friend , FD = 5
+2026-04-05 16:43:52 / New Client Connected   FD = 5
+2026-04-05 16:43:53 /  Token , FD = 
+2026-04-05 16:43:53 / Check Token = Valid , FD = 5
+2026-04-05 16:44:04 / New Client Connected   FD = 6
+2026-04-05 16:44:04 / Token , FD = 
+2026-04-05 16:44:04 / Check Token = Valid , FD = 6
+2026-04-05 16:44:12 / New Client Connected   FD = 5
+2026-04-05 16:44:14 /  Token , FD = 
+2026-04-05 16:44:14 / Check Token = Valid , FD = 5
+2026-04-05 16:44:20 / Search For Friend , FD = 6
+2026-04-05 16:44:21 / Add friend request to 7 id , FD = 6
+2026-04-05 16:44:24 / Add friend request to 3 id , FD = 6
+2026-04-05 16:44:25 / Add friend request to 4 id , FD = 6
+2026-04-05 16:44:50 / New Client Connected   FD = 5
+2026-04-05 16:44:51 /  Token , FD = 
+2026-04-05 16:44:51 / Check Token = Valid , FD = 5
+2026-04-05 16:45:40 / New Client Connected   FD = 5
+2026-04-05 16:45:41 /  Token , FD = 
+2026-04-05 16:45:41 / Check Token = Valid , FD = 5
+2026-04-05 16:46:57 / New Client Connected   FD = 6
+2026-04-05 16:46:57 / Token , FD = 
+2026-04-05 16:46:57 / Check Token = Valid , FD = 6
+2026-04-05 16:47:02 / New Client Connected   FD = 5
+2026-04-05 16:47:03 /  Token , FD = 
+2026-04-05 16:47:03 / Check Token = Valid , FD = 5
+2026-04-05 16:47:09 / Search For Friend , FD = 6
+2026-04-05 16:47:10 / Add friend request to 7 id , FD = 6
+2026-04-05 16:48:37 / New Client Connected   FD = 5
+2026-04-05 16:48:38 /  Token , FD = 
+2026-04-05 16:48:38 / Check Token = Valid , FD = 5
+2026-04-05 17:01:11 / New Client Connected   FD = 5
+2026-04-05 17:01:12 /  Token , FD = 
+2026-04-05 17:01:12 / Check Token = Valid , FD = 5
+2026-04-05 17:02:49 / New Client Connected   FD = 5
+2026-04-05 17:02:50 /  Token , FD = 
+2026-04-05 17:02:50 / Check Token = Valid , FD = 5
+2026-04-05 17:02:58 / Add friend request to 7 id , FD = 6
+2026-04-05 17:03:20 / New Client Connected   FD = 6
+2026-04-05 17:03:20 / Token , FD = 
+2026-04-05 17:03:20 / Check Token = Valid , FD = 6
+2026-04-05 17:03:26 / New Client Connected   FD = 5
+2026-04-05 17:03:27 /  Token , FD = 
+2026-04-05 17:03:27 / Check Token = Valid , FD = 5
+2026-04-05 17:03:34 / Search For Friend , FD = 6
+2026-04-05 17:03:35 / Add friend request to 7 id , FD = 6
+2026-04-05 17:04:05 / New Client Connected   FD = 5
+2026-04-05 17:04:06 /  Token , FD = 
+2026-04-05 17:04:06 / Check Token = Valid , FD = 5
+2026-04-05 17:04:22 / Add friend request to 7 id , FD = 6
+2026-04-05 17:04:33 / Add friend request to 7 id , FD = 6
+2026-04-05 17:06:30 / New Client Connected   FD = 5
+2026-04-05 17:06:31 /  Token , FD = 
+2026-04-05 17:06:31 / Check Token = Valid , FD = 5
+2026-04-05 17:06:33 / New Client Connected   FD = 6
+2026-04-05 17:06:33 / Token , FD = 
+2026-04-05 17:06:33 / Check Token = Valid , FD = 6
+2026-04-05 17:06:52 / Search For Friend , FD = 6
+2026-04-05 17:06:54 / Add friend request to 7 id , FD = 6
+2026-04-05 17:07:22 / New Client Connected   FD = 6
+2026-04-05 17:07:22 / Token , FD = 
+2026-04-05 17:07:22 / Check Token = Valid , FD = 6
+2026-04-05 17:07:29 / New Client Connected   FD = 5
+2026-04-05 17:07:30 /  Token , FD = 
+2026-04-05 17:07:30 / Check Token = Valid , FD = 5
+2026-04-05 17:10:00 / Search For Friend , FD = 6
+2026-04-05 17:10:01 / Add friend request to 7 id , FD = 6
+2026-04-05 17:14:38 / New Client Connected   FD = 6
+2026-04-05 17:14:38 / Token , FD = 
+2026-04-05 17:14:38 / Check Token = Valid , FD = 6
+2026-04-05 17:14:49 / New Client Connected   FD = 5
+2026-04-05 17:14:50 /  Token , FD = 
+2026-04-05 17:14:50 / Check Token = Valid , FD = 5
+2026-04-05 17:14:59 / Search For Friend , FD = 6
+2026-04-05 17:15:00 / Add friend request to 7 id , FD = 6
+2026-04-05 17:15:23 / New Client Connected   FD = 5
+2026-04-05 17:15:25 /  Token , FD = 
+2026-04-05 17:15:25 / Check Token = Valid , FD = 5
+2026-04-05 17:15:50 / New Client Connected   FD = 5
+2026-04-05 17:15:51 /  Token , FD = 
+2026-04-05 17:15:51 / Check Token = Valid , FD = 5
+2026-04-05 17:16:23 / Search For Friend , FD = 5
+2026-04-05 17:16:28 / Add friend request to 3 id , FD = 5
+2026-04-05 17:16:54 / Add friend request to 3 id , FD = 5
+2026-04-05 17:17:08 / Search For Friend , FD = 5
+2026-04-05 17:17:18 / Search For Friend , FD = 5
+2026-04-05 17:17:19 / Add friend request to 9 id , FD = 5
+2026-04-05 17:17:32 / Search For Friend , FD = 6
+2026-04-05 17:27:53 / New Client Connected   FD = 5
+2026-04-05 17:27:54 /  Token , FD = 
+2026-04-05 17:27:54 / Check Token = Valid , FD = 5
+2026-04-05 17:30:40 / New Client Connected   FD = 6
+2026-04-05 17:31:07 / Register , FD = 6
+2026-04-05 17:31:07 / Register = Success, FD = 6
+2026-04-05 17:31:13 / Search For Friend , FD = 6
+2026-04-05 17:31:14 / Add friend request to 7 id , FD = 6
+2026-04-05 17:31:34 / Search For Friend , FD = 5
+2026-04-05 17:31:36 / Add friend request to 4 id , FD = 5
+2026-04-05 17:31:50 / New Client Connected   FD = 5
+2026-04-05 17:31:50 /  Token , FD = 
+2026-04-05 17:31:50 / Check Token = Valid , FD = 5
+2026-04-05 18:12:01 / New Client Connected   FD = 5
+2026-04-05 18:12:02 /  Token , FD = 
+2026-04-05 18:51:59 / Server Started
+2026-04-05 18:52:03 / New Client Connected   FD = 5
+2026-04-05 18:52:04 /  Token , FD = 
+2026-04-05 18:52:04 / Check Token = Valid , FD = 5
+2026-04-05 18:52:13 / New Client Connected   FD = 6
+2026-04-05 18:52:13 / Token , FD = 
+2026-04-05 18:52:13 / Check Token = Valid , FD = 6
+2026-04-05 18:52:43 / New Client Connected   FD = 5
+2026-04-05 18:52:43 /  Token , FD = 
+2026-04-05 18:52:43 / Check Token = Valid , FD = 5
+2026-04-05 18:58:59 / New Client Connected   FD = 5
+2026-04-05 18:58:59 /  Token , FD = 
+2026-04-05 18:58:59 / Check Token = Valid , FD = 5
+2026-04-05 19:21:24 / New Client Connected   FD = 5
+2026-04-05 19:21:25 /  Token , FD = 
+2026-04-05 19:21:25 / Check Token = Valid , FD = 5
+2026-04-05 21:33:19 / New Client Connected   FD = 5
+2026-04-05 21:33:20 /  Token , FD = 
+2026-04-05 21:33:20 / Check Token = Valid , FD = 5
+2026-04-05 21:34:39 / New Client Connected   FD = 5
+2026-04-05 21:34:39 /  Token , FD = 
+2026-04-05 21:34:39 / Check Token = Valid , FD = 5
+2026-04-05 21:35:27 / New Client Connected   FD = 5
+2026-04-05 21:35:27 /  Token , FD = 
+2026-04-05 21:35:27 / Check Token = Valid , FD = 5
+2026-04-05 21:36:11 / New Client Connected   FD = 5
+2026-04-05 21:36:12 /  Token , FD = 
+2026-04-05 21:36:12 / Check Token = Valid , FD = 5
+2026-04-05 21:36:30 / New Client Connected   FD = 5
+2026-04-05 21:36:31 /  Token , FD = 
+2026-04-05 21:36:31 / Check Token = Valid , FD = 5
+2026-04-05 21:37:09 / New Client Connected   FD = 5
+2026-04-05 21:37:10 /  Token , FD = 
+2026-04-05 21:37:10 / Check Token = Valid , FD = 5
+2026-04-05 21:39:16 / New Client Connected   FD = 5
+2026-04-05 21:39:17 /  Token , FD = 
+2026-04-05 21:39:17 / Check Token = Valid , FD = 5
+2026-04-05 21:49:35 / New Client Connected   FD = 5
+2026-04-05 21:49:35 /  Token , FD = 
+2026-04-05 21:49:35 / Check Token = Valid , FD = 5
+2026-04-05 21:51:10 / Search For Friend , FD = 5
+2026-04-05 21:51:16 / Search For Friend , FD = 5
+2026-04-05 21:51:17 / Add friend request to 9 id , FD = 5
+2026-04-05 21:52:30 / New Client Connected   FD = 5
+2026-04-05 21:52:30 /  Token , FD = 
+2026-04-05 21:52:30 / Check Token = Valid , FD = 5
+2026-04-05 21:59:34 / New Client Connected   FD = 5
+2026-04-05 21:59:34 /  Token , FD = 
+2026-04-05 21:59:34 / Check Token = Valid , FD = 5
+2026-04-05 22:07:30 / New Client Connected   FD = 5
+2026-04-05 22:07:30 /  Token , FD = 
+2026-04-05 22:07:30 / Check Token = Valid , FD = 5
+2026-04-05 22:10:47 / New Client Connected   FD = 5
+2026-04-05 22:10:48 /  Token , FD = 
+2026-04-05 22:10:48 / Check Token = Valid , FD = 5
+2026-04-05 22:11:25 / Search For Friend , FD = 5
+2026-04-05 22:15:02 / New Client Connected   FD = 5
+2026-04-05 22:15:02 /  Token , FD = 
+2026-04-05 22:15:02 / Check Token = Valid , FD = 5
+2026-04-05 22:15:09 / Search For Friend , FD = 5
+2026-04-05 22:15:11 / Add friend request to 3 id , FD = 5
+2026-04-05 22:17:45 / New Client Connected   FD = 6
+2026-04-05 22:17:47 / New Client Connected   FD = 5
+2026-04-05 22:17:48 /  Token , FD = 
+2026-04-05 22:17:48 / Check Token = Valid , FD = 5
+2026-04-05 22:18:14 / Register , FD = 6
+2026-04-05 22:18:14 / Register = Success, FD = 6
+2026-04-05 22:19:34 / Search For Friend , FD = 6
+2026-04-05 22:19:36 / Add friend request to 7 id , FD = 6
+2026-04-05 22:19:37 / Add friend request to 3 id , FD = 6
+2026-04-05 22:19:37 / Add friend request to 4 id , FD = 6
+2026-04-05 22:19:45 / Add friend request to 7 id , FD = 6
+2026-04-05 22:19:45 / Add friend request to 3 id , FD = 6
+2026-04-05 22:19:46 / Add friend request to 4 id , FD = 6
+2026-04-05 22:19:56 / Search For Friend , FD = 6
+2026-04-05 22:20:24 / Search For Friend , FD = 6
+2026-04-05 22:20:25 / Add friend request to 7 id , FD = 6
+2026-04-05 22:20:26 / Add friend request to 7 id , FD = 6
+2026-04-05 22:20:29 / Add friend request to 7 id , FD = 6
+2026-04-05 22:20:29 / Add friend request to 7 id , FD = 6
+2026-04-05 22:29:13 / Server Started
+2026-04-05 22:29:31 / New Client Connected   FD = 5
+2026-04-05 22:29:32 /  Token , FD = 
+2026-04-05 22:29:32 / Check Token = Valid , FD = 5
+2026-04-05 22:30:14 / New Client Connected   FD = 5
+2026-04-05 22:31:55 / New Client Connected   FD = 5
+2026-04-05 22:31:55 /  Token , FD = 
+2026-04-05 22:31:55 / Check Token = Invalid , FD = 5
+2026-04-05 22:32:12 / New Client Connected   FD = 6
+2026-04-05 22:32:22 / Register , FD = 5
+2026-04-05 22:32:22 / Register = Success, FD = 5
+2026-04-05 22:33:05 / Register , FD = 6
+2026-04-05 22:33:05 / Register = Success, FD = 6
+2026-04-05 22:37:55 / New Client Connected   FD = 6
+2026-04-05 22:37:55 / Token , FD = 
+2026-04-05 22:37:55 / Check Token = Invalid , FD = 6
+2026-04-05 22:38:12 / Register , FD = 6
+2026-04-05 22:38:12 / Register = Success, FD = 6
+2026-04-05 22:38:17 / Search For Friend , FD = 6
+2026-04-05 22:38:18 / Add friend request to 7 id , FD = 6
+2026-04-05 22:38:36 / New Client Connected   FD = 6
+2026-04-05 22:38:36 / Token , FD = 
+2026-04-05 22:38:36 / Check Token = Valid , FD = 6
+2026-04-05 22:38:55 / New Client Connected   FD = 6
+2026-04-05 22:39:13 / Login , FD = 6
+2026-04-05 22:39:13 / Login = Failed , FD = 6
+2026-04-05 22:39:18 / Login , FD = 6
+2026-04-05 22:39:18 / Login = Failed , FD = 6
+2026-04-05 22:39:21 / Login , FD = 6
+2026-04-05 22:39:21 / Login = Success, FD = 6
+2026-04-05 22:39:31 / New Client Connected   FD = 6
+2026-04-05 22:39:31 / Token , FD = 
+2026-04-05 22:39:31 / Check Token = Valid , FD = 6
+2026-04-05 22:42:56 / New Client Connected   FD = 6
+2026-04-05 22:42:56 / Token , FD = 
+2026-04-05 22:42:56 / Check Token = Valid , FD = 6
+2026-04-05 22:43:14 / New Client Connected   FD = 6
+2026-04-05 22:43:26 / Login , FD = 6
+2026-04-05 22:43:26 / Login = Success, FD = 6
+2026-04-05 22:44:59 / New Client Connected   FD = 5
+2026-04-05 22:45:13 / Register , FD = 5
+2026-04-05 22:45:13 / Register = Success, FD = 5
+2026-04-05 22:45:29 / Search For Friend , FD = 6
+2026-04-05 22:45:31 / Add friend request to 13 id , FD = 6
+2026-04-05 22:48:06 / New Client Connected   FD = 6
+2026-04-05 22:48:06 / Token , FD = 
+2026-04-05 22:48:06 / Check Token = Valid , FD = 6
+2026-04-05 22:48:52 / New Client Connected   FD = 6
+2026-04-05 22:48:53 / Token , FD = 
+2026-04-05 22:48:53 / Check Token = Valid , FD = 6

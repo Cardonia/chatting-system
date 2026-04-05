@@ -33,7 +33,7 @@ MainWindow::MainWindow() : QMainWindow(nullptr)
     checkToken();
 }
 
-QString FolderNameConfig = "TalkBradarDev1";
+QString FolderNameConfig = "TalkBradarDev";
 //function to check Token
 void MainWindow::checkToken(){
     QSettings settings(FolderNameConfig, "TalkBradar");

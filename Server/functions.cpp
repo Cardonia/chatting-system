@@ -210,6 +210,10 @@ void searchForClient(int client , std::string msg) {
     log("Search For Friend , FD = "+std::to_string(client));
 	json j = json::parse(msg);
     std::string searchName = j["name"];
+    if (searchName.empty()) {
+        std::cout << "Search name is empty" << std::endl;
+        return;
+    }
     std::cout << "Searching for: " << searchName << std::endl;
 
     std::string tokenHash;
@@ -233,7 +237,11 @@ void searchForClient(int client , std::string msg) {
 void addFriendRequest(int client, std::string msg) {
     json j = json::parse(msg);
     std::string token = j["token"];
-    int toFriendId =  j["toId"];
+    
+    int toFriendId;
+    if (j["toId"].is_string())  toFriendId = std::stoi(j["toId"].get<std::string>());
+    else toFriendId = j["toId"].get<int>();
+
     log("Add friend request to " + std::to_string(toFriendId) + " id , FD = " + std::to_string(client));
     std::string tokenHash = picosha2::hash256_hex_string(token);
     std::cout << token << " wants to add " << toFriendId << " ID as a friend" << std::endl;
@@ -243,7 +251,11 @@ void addFriendRequest(int client, std::string msg) {
 void acceptFriendRequest(int client, std::string msg) {
     json j = json::parse(msg);
     std::string token = j["token"];
-    int toFriendId = j["toId"];
+
+    int toFriendId;
+    if (j["toId"].is_string())  toFriendId = std::stoi(j["toId"].get<std::string>());
+    else toFriendId = j["toId"].get<int>();
+
     std::string tokenHash = picosha2::hash256_hex_string(token);
     std::cout << token << " wants to accept ID = " << toFriendId << " friend request " << std::endl;
     db.acceptFriendRequest(toFriendId, tokenHash);
@@ -288,7 +300,11 @@ void updateAllClientData(int client , std::string token) {
 void handleUserSendMessage(int client,const std::string& msg){
     std::cout<<"Debug: handleUserSendMessage called "<<'\n';
     json j = json::parse(msg);
-    int toID = j["friendID"];
+
+    int toID;
+    if (j["friendID"].is_string()) toID = std::stoi(j["friendID"].get<std::string>());
+    else toID = j["friendID"].get<int>();
+
     std::string token = j["token"];
     std::string text = j["text"];
 
@@ -319,7 +335,11 @@ void handleUserSendMessage(int client,const std::string& msg){
 void handleChatHistory(int client, const std::string& msg){
     json j = json::parse(msg);
     std::string token = j["token"];
-    int toID = j["friendID"];
+
+    int toID;
+    if (j["friendID"].is_string()) toID = std::stoi(j["friendID"].get<std::string>());
+    else toID = j["friendID"].get<int>();
+
     std::string tokenHash = picosha2::hash256_hex_string(token);
     int fromID = db.whatUserIdIAM(tokenHash);
 
